@@ -70,7 +70,7 @@ class NewOtpGenerationView(APIView):
         # updating user's otp
         EmailOTP.objects.filter(user=user).update(otp=new_otp, timestamp=timezone.now())
         
-        send_otp_signal.send(sender=None,user=user)
+        send_otp_signal.send(sender=None,user=user, type="new_otp_request")
         
         return Response({"message":"OTP sent to email", "success":True }, status=status.HTTP_200_OK)
         

@@ -8,9 +8,15 @@ send_otp_signal=Signal()
 @receiver(send_otp_signal, sender=None)
 def send_otp_signal_handler(sender, **kwargs):
     user=kwargs["user"]
+    type=kwargs["type"]
     otp=EmailOTP.objects.filter(user=user).first().otp
-    subject=f"{user.first_name or user.email.split('@')[0]}, here's your OTP"
-    message=f"Hi {user.username},\n\nEnter this code to verify your email.\n\n{otp}\n\nBest Regards,\nDev Team\n8 Tech Solutions"
+
+    if type=="new_otp_request":
+        subject = 'Password Reset Request - Your New OTP Code'
+        message = f"Hi {user.first_name or user.email.split('@')[0] or user.registration_number},\n\nYou have requested a new OTP to reset your password. Use the following OTP code to reset your password:\n\n{otp}\n\nIf you did not request this, please ignore this email.\n\nBest regards,\nTechWave Team"
+    elif type=="first_time_request":
+        subject = 'Password Reset Request - Your OTP Code'
+        message = f"Hi {user.first_name or user.email.split('@')[0] or user.registration_number},\n\nYou have requested to reset your password. Use the following OTP code to reset your password:\n\n{otp}\n\nIf you did not request this, please ignore this email.\n\nBest regards,\nTechWave Team"
     sender=settings.EMAIL_HOST_USER
     recipient_list=[user.email]
     

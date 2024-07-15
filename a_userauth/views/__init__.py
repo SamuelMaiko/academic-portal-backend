@@ -3,6 +3,8 @@ from .LogoutView import LogoutView
 from .RegistrationView import RegistrationView
 from .EmailVerificationView import EmailVerificationView
 from .NewOtpGenerationView import NewOtpGenerationView
-from .ForgotPasswordView import ForgotPasswordView
-from .VerifyOTPView import VerifyOTPView
 from .ResetPasswordView import ResetPasswordView
+from .ResetPasswordVerifyOTPView import ResetPasswordVerifyOTPView
+from .SubmitNewPasswordView import SubmitNewPasswordView
+from .DeactivateAccountView import DeactivateAccountView
+from .DeleteAccountView import DeleteAccountView

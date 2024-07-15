@@ -1,11 +1,12 @@
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework import status
-from a_userauth.models import CustomUser, EmailOTP
-from a_userauth.serializers import ResetPasswordSerializer 
-from django.contrib.auth.hashers import make_password
-from a_userauth.HelperFunctions import create_otp_model
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from a_userauth.models import CustomUser
+from rest_framework import status
+from rest_framework.views import APIView
+from a_userauth.signals import send_otp_signal
+from a_userauth.HelperFunctions import generate_otp
+from a_userauth.models import EmailOTP
+from django.utils import timezone
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
@@ -13,73 +14,52 @@ class ResetPasswordView(APIView):
     permission_classes = [AllowAny]
     authentication_classes=[]
     
-    @swagger_auto_schema(
-        operation_description="Resets the user's password using the new password and the temporary token.",
+    @swagger_auto_schema(   
+        operation_description="Sends an OTP to email incase user has forgotten the password.",
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                'temp_token': openapi.Schema(type=openapi.TYPE_STRING, description='Temporary token sent to the user\'s email'),
-                'new_password': openapi.Schema(type=openapi.TYPE_STRING, description='New password for the user'),
+                'email': openapi.Schema(type=openapi.TYPE_STRING, description='Email of the user'),
             },
-            required=['temp_token', 'new_password']
+            required=['email']
         ),
         responses={
             200: openapi.Response(
                 description="Ok",
                 examples={
                     "application/json": {
-                        "message": "Password reset successfully",
-                        "success": True
+                        "message": "OTP sent to email"
                     }
                 }
             ),
-            400: openapi.Response(
-                description="Bad request",
+            404: openapi.Response(
+                description="Not found",
                 examples={
-                    "application/json": [
-                        {
-                            "example1":{
-                                "error":"Invalid token."
-                            },
-                            "example1":{
-                                "error": {
-                                    "temp_token": [
-                                        "This field is required."
-                                    ],
-                                    "new_password": [
-                                        "This field is required."
-                                    ],
-                                    # other possible errors
-                            },
-                            },
-                        }
-                    ]
+                    "application/json": {
+                        "message": "User with email does not exist."
+                    }
                 }
             ),
         },
         tags=['Forgot Password']
     )
-     
-    def post(self, request):
-        serializer=ResetPasswordSerializer(data=request.data)
-        if serializer.is_valid():
-            temp_token=serializer.validated_data["temp_token"]
-            new_password=serializer.validated_data["new_password"]
 
-            try:
-                email_otp_instance=EmailOTP.objects.get(temp_token=temp_token)
-            except EmailOTP.DoesNotExist:
-                return Response({"error":"Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
-            
-            # setting the new password
-            user=email_otp_instance.user
-            user.password=make_password(new_password)
-            user.save()
-            
-            # deleting the used temp_token along with model and creating the model again for a new temp token for next time
-            user.email_otp.delete()
-            create_otp_model(user)
-            
-            return Response({"message":"Password reset successfully", "success":True}, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        email=request.data.get("email")
+        if not email:
+            return Response({'error':'Provide email.'})
+        try:
+            user=CustomUser.objects.filter(email=email).first()
+        except CustomUser.DoesNotExist:
+            return Response({'message':"User with email does not exist."}, status=status.HTTP_404_NOT_FOUND)
+
+        # generating new otp (because we use the same for email verification earlier)
+        new_otp=generate_otp()
+        # updating the otp
+        EmailOTP.objects.filter(user=user).update(otp=new_otp, timestamp=timezone.now())
+        # signal to send otp to user's email
+        send_otp_signal.send(sender=None, user=user, type="first_time_request")
+        
+        return Response({'message':"OTP sent to email"})
+        
+        

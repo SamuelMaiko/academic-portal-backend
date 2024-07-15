@@ -5,13 +5,13 @@ from django.conf import settings
 import uuid
 
 class EmailOTP(models.Model):
-    user=models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="email_otp")
+    user=models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="otp")
     otp=models.CharField(max_length=6)
     temp_token=models.UUIDField(default=uuid.uuid4, editable=False)
     timestamp=models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return f"{self.user.username}'s OTP"
+        return f"{self.user.registration_number}'s OTP"
     
     class Meta:
         db_table="OTP"

@@ -11,7 +11,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, BaseModel):
     ]
     
     registration_number = models.CharField(unique=True, max_length=100)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, null=True)
     first_name=models.CharField(max_length=50)
     last_name=models.CharField(max_length=50)
     role = models.CharField(max_length=25, blank=True, choices=ROLE_CHOICES, default="Writer")
@@ -22,7 +22,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, BaseModel):
 
     USERNAME_FIELD = 'registration_number'
     EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = ['email']
+    REQUIRED_FIELDS = ['']
 
     objects = CustomUserManager()
     

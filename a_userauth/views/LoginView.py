@@ -1,12 +1,12 @@
 from django.contrib.auth import authenticate, login
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from a_userauth.models import CustomUser
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.views import APIView
 from a_userauth.serializers import UserSerializer
 from rest_framework.authtoken.models import Token
+from a_userauth.models import CustomUser
 from django.conf import settings
 from a_userauth.signals import send_otp_signal
 from drf_yasg.utils import swagger_auto_schema
@@ -72,27 +72,27 @@ class LoginView(APIView):
     )
     
     def post(self, request):
-        email=request.data.get('email')
+        registration_number=request.data.get('registration_number')
         password=request.data.get('password')
         
         message='Provide '
-        if not email:
-            message+="email "
+        if not registration_number:
+            message+="registration_number "
         
         if not password:
-            # message+=message=="Provide "?"":""
-            message+="password."
+            message+=", password."
+            
         if message !="Provide ":
             return Response({"error":message}, status=status.HTTP_400_BAD_REQUEST)
         
         
-        user=authenticate(request, username=email, password=password)
+        user=authenticate(request, username=registration_number, password=password)
         
         if user is not None:
             login(request, user)
             # getting user token 
             token, created_token=Token.objects.get_or_create(user=user)
-            user_instance=get_object_or_404(CustomUser, email=email)
+            user_instance=get_object_or_404(CustomUser, registration_number=registration_number)
             serializer=UserSerializer(user_instance)
             
             response_dict={
@@ -103,12 +103,4 @@ class LoginView(APIView):
             return Response(response_dict, status=status.HTTP_200_OK)
         # If user returns NONE = wrong credentials
         else:
-            try:
-                user = CustomUser.objects.get(email=email)
-                if not user.is_active:
-                    send_otp_signal.send(sender=None,user=user)
-                    return Response({"error": "User account is inactive. Please verify your email."}, status=status.HTTP_403_FORBIDDEN)
-            except CustomUser.DoesNotExist:
-                pass
-            
             return Response({"error": "Invalid email or password"}, status=status.HTTP_404_NOT_FOUND)

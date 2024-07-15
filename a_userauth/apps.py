@@ -10,6 +10,7 @@ class AUserauthConfig(AppConfig):
             CreateUserProfile,
             SendOTP,
             SendWelcomeEmail,
-            GenerateRegistrationNumber
+            GenerateRegistrationNumber,
+            EmailAccountCredentials
         )
     

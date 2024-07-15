@@ -4,9 +4,10 @@ import os
 
 env = environ.Env(
     # set casting, default value
-    EMAIL_USE_TLS=(bool, True),
-    EMAIL_USE_SSL=(bool, False),
-    EMAIL_PORT=(int, 587),
+    EMAIL_HOST_PASSWORD=(str,""),
+    EMAIL_USE_TLS=(bool, False),
+    EMAIL_USE_SSL=(bool, True),
+    EMAIL_PORT=(int, 465),
     DEBUG=(bool, False)
 )
 
@@ -30,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework.authtoken',
     'rest_framework',
+    'django_extensions',
     'api',
     'a_userauth',
     'a_work',
@@ -37,6 +39,7 @@ INSTALLED_APPS = [
     'a_revisions',
     'a_submissions',
     'a_accounts',
+    'a_onboarding',
 ]
 
 MIDDLEWARE = [
@@ -122,6 +125,6 @@ EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_BACKEND = env('EMAIL_BACKEND')
 EMAIL_PORT = env('EMAIL_PORT')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = env('EMAIL_USE_TLS')
 EMAIL_USE_SSL = env('EMAIL_USE_SSL')

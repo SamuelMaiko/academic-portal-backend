@@ -22,7 +22,7 @@ class CustomUserAdmin(UserAdmin):
     )
 
     search_fields = ('registration_number', 'first_name', 'last_name', 'email')
-    ordering = ('registration_number',)
+    ordering = ('created_at',)
 
 
 # Register your User model with the custom admin class
