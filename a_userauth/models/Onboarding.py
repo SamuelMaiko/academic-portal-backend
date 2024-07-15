@@ -5,8 +5,8 @@ from api.models import BaseModel
 class Onboarding(BaseModel):
     details_filled=models.BooleanField(default=False)
     profile_completed=models.BooleanField(default=False)
-    is_changed_password=models.BooleanField(default=False)
-    user=models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user')
+    password_changed=models.BooleanField(default=False)
+    user=models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='onboarding')
 
     class Meta:
         db_table = "onboarding"  
