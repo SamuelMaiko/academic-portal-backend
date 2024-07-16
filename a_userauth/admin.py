@@ -9,7 +9,7 @@ class CustomUserAdmin(UserAdmin):
 
     fieldsets = (
         (None, {'fields': ('registration_number', 'password')}),
-        ('Personal Info', {'fields': ('first_name', 'last_name', 'email')}),
+        ('Personal Info', {'fields': ('first_name', 'last_name', 'email','is_verified')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
@@ -28,5 +28,4 @@ class CustomUserAdmin(UserAdmin):
 # Register your User model with the custom admin class
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(EmailOTP)
-admin.site.register(Onboarding)
 admin.site.register(RegistrationCode)

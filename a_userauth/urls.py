@@ -9,7 +9,8 @@ urlpatterns = [
     path('reset-password-verify-otp/', views.ResetPasswordVerifyOTPView.as_view(), name="reset-password-verify-otp"),
     path('submit-new-password/', views.SubmitNewPasswordView.as_view(), name="submit-new-password"),
     path('logout/', views.LogoutView.as_view(), name="log-out"),
+    path('send-verification-otp/', views.SendVerificationOTPView.as_view(), name="send-verification-otp"),
+    path('verify-email/', views.VerifyEmailView.as_view(), name="verify-email"),
     path('deactivate-account/', views.DeactivateAccountView.as_view(), name="deactivate-account"),
     path('delete-account/', views.DeleteAccountView.as_view(), name='delete-account'),
-    path('email-verification/', views.EmailVerificationView.as_view(), name="email-verification"),
 ]

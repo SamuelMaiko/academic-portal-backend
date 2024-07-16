@@ -5,11 +5,10 @@ from a_userauth.models import CustomUser, EmailOTP
 from a_userauth.signals import send_welcome_email_signal
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 
-class EmailVerificationView(APIView):    
-    permission_classes = [AllowAny]
-    authentication_classes=[]
+class VerifyEmailView(APIView):    
+    permission_classes = [IsAuthenticated]
     
     @swagger_auto_schema(
         operation_description="Receives the OTP and verifys the user's email.",
@@ -64,18 +63,11 @@ class EmailVerificationView(APIView):
     )
     
     def post(self, request):
-        email=request.data.get("email")
         user_entered_otp=request.data.get("otp")
+        user=request.user
         
-        if not email:   
-            return Response({"error":"Email not provided"}, status=status.HTTP_400_BAD_REQUEST)
         if not user_entered_otp:
             return Response({"error":"OTP not provided"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        user=CustomUser.objects.filter(email=email).first()
-        
-        if not user:
-            return Response({"error":"user with email doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
         
         email_otp=EmailOTP.objects.get(user=user)
         
@@ -84,13 +76,9 @@ class EmailVerificationView(APIView):
             # if otp not expired
             if not email_otp.is_expired:
                 user.is_verified=True
-                user.is_active=True
                 user.save()
                 
-                # send welcome message to email
-                send_welcome_email_signal.send(sender=None, user=user)
-                
-                return Response({"message":"OTP verification successful.","success":True}, status=status.HTTP_200_OK)
+                return Response({"message":"OTP verification successful.","success":True})
             # if otp  not expired
             else:
                 return Response({"error":"OTP has expired. Request for new one."}, status=status.HTTP_400_BAD_REQUEST)

@@ -20,5 +20,5 @@ def send_otp_signal_handler(sender, **kwargs):
     sender=settings.EMAIL_HOST_USER
     recipient_list=[user.email]
     
-    send_mail(subject, message, sender, recipient_list, fail_silently=True)
+    send_mail(subject, message, sender, recipient_list, fail_silently=False)
     

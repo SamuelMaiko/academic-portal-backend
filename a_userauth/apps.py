@@ -11,6 +11,7 @@ class AUserauthConfig(AppConfig):
             SendOTP,
             SendWelcomeEmail,
             GenerateRegistrationNumber,
-            EmailAccountCredentials
+            EmailAccountCredentials,
+            SendVerificationOTP
         )
     
