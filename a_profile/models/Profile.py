@@ -8,6 +8,7 @@ class Profile(BaseModel):
     phone_number = models.CharField(max_length=20, blank=True)
     country = models.CharField(max_length=100, blank=True)
     county = models.CharField(max_length=100, blank=True)
+    linkedin=models.URLField(null=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
 
     class Meta:

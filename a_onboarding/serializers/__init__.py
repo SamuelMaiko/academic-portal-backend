@@ -1,1 +1,2 @@
 from .OnboardingSerializer import OnboardingSerializer
+from .CompleteProfileSerializer import CompleteProfileSerializer

@@ -10,6 +10,7 @@ class SocialMediaLink(BaseModel):
 
     class Meta:
         db_table = "social_media_links"  
+        unique_together=('platform','profile',)
 
     def __str__(self):
         return f'{self.platform} link for {self.profile.user.registration_number}'

@@ -4,4 +4,5 @@ urlpatterns = [
     path('auth/', include('a_userauth.urls')),
     path('onboarding/', include('a_onboarding.urls')),
     path('profile/', include('a_profile.urls')),
+    path('work/', include('a_work.urls')),
 ]

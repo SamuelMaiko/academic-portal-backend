@@ -19,7 +19,6 @@ class OnboardingSerializer(serializers.ModelSerializer):
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
         instance.save()
-    
         # Update Profile related fields
         if 'profile' in validated_data:
             profile_data = validated_data.pop('profile', {})

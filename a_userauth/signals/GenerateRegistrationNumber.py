@@ -10,9 +10,6 @@ def generate_reg_no_handler(sender, created, instance, **kwargs):
         instance.registration_number=generate_reg_no(instance.pk)
         instance.save()
 
-
-
-
 def generate_reg_no(pk):
     random_digits = ''.join(random.choices(string.digits, k=2))
     return f'TW{random_digits}0{pk}'

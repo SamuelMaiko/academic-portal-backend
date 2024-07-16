@@ -3,7 +3,7 @@ from .Work import Work
 from api.models import BaseModel 
 
 class WorkImage(BaseModel):
-    file=models.FileField(upload_to='work_images')
+    image=models.ImageField(upload_to='work_images', null=True, blank=True)
     work=models.ForeignKey(Work, on_delete=models.CASCADE, related_name='images')
 
     class Meta:

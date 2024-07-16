@@ -13,6 +13,8 @@ class ChangePasswordView(APIView):
     permission_classes = [IsAuthenticated]
     
     def put(self, request):
+        search_param=request.GET.get('type','')
+
         user = request.user
         serializer = ChangePasswordSerializer(data=request.data)
         
@@ -31,9 +33,10 @@ class ChangePasswordView(APIView):
             # Set the new password
             user.set_password(new_password)
             user.save()
-            
-            user.onboarding.password_changed=True
-            user.onboarding.save()
+
+            if search_param=="first":
+                user.onboarding.password_changed=True
+                user.onboarding.save()
 
             return Response({"message": "Password changed successfully."}, status=status.HTTP_200_OK)
         

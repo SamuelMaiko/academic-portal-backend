@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser, AbstractBaseUser, Permissio
 from api.models import BaseModel
 from a_userauth.managers import CustomUserManager
 from django.utils import timezone
+from a_work.models import Work
+from a_bookmarks.models import Bookmark
 
 class CustomUser(AbstractBaseUser, PermissionsMixin, BaseModel):
     ROLE_CHOICES=[
@@ -19,6 +21,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, BaseModel):
     is_staff=models.BooleanField(default=False)
     is_active=models.BooleanField(default=True)
     is_verified=models.BooleanField(default=False)
+    bookmarks= models.ManyToManyField(
+        Work, 
+        through=Bookmark, 
+        related_name='bookmarked_by'
+        )
 
     USERNAME_FIELD = 'registration_number'
     EMAIL_FIELD = 'email'

@@ -95,8 +95,13 @@ class LoginView(APIView):
             user_instance=get_object_or_404(CustomUser, registration_number=registration_number)
             serializer=UserSerializer(user_instance)
             
+            response=serializer.data.copy()
+            response["details_filled"]=user.onboarding.details_filled
+            response["profile_completed"]=user.onboarding.profile_completed
+            response["password_changed"]=user.onboarding.password_changed
+
             response_dict={
-                "user":serializer.data,
+                "user":response,
                 "token":token.key
                 }
                 

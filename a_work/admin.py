@@ -5,6 +5,5 @@ from .models import *
 admin.site.register(Work)
 admin.site.register(WorkImage)
 admin.site.register(WorkFile)
-admin.site.register(Bookmark)
 admin.site.register(RevokedWork)
 admin.site.register(DefaultWork)
