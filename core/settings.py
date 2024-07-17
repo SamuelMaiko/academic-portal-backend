@@ -1,6 +1,7 @@
-from pathlib import Path
-import environ
 import os
+from pathlib import Path
+
+import environ
 
 env = environ.Env(
     # set casting, default value
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'a_accounts',
     'a_onboarding',
     'a_bookmarks',
+    'a_notifications',
 ]
 
 MIDDLEWARE = [

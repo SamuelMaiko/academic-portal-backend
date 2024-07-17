@@ -1,4 +1,5 @@
 from django.urls import path
+
 from . import views
 
 urlpatterns = [
@@ -10,4 +11,5 @@ urlpatterns = [
     path('<int:id>/uptake/',  views.UptakeWorkView.as_view(), name="uptake-work"),
     path('<int:id>/revoke/',  views.RevokeWorkView.as_view(), name="revoke-work"),
     path('<int:id>/assign/',  views.AssignWorkView.as_view(), name="assign-work"),
+    path('uptaken/',  views.UptakenWorkView.as_view(), name="uptaken-work"),
 ]

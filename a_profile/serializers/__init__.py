@@ -1,4 +1,5 @@
 from .ChangePasswordSerializer import ChangePasswordSerializer
+from .ContactInfoSerializer import ContactInfoSerializer
 from .ProfileSerializer import ProfileSerializer
 from .ProfileUpdateSerializer import ProfileUpdateSerializer
 from .UpdatePictureSerializer import UpdatePictureSerializer

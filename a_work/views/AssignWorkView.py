@@ -1,12 +1,16 @@
-from rest_framework.views import APIView    
-from rest_framework.response import Response
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from a_work.models import Work
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from a_accounts.helpers import get_admins
+from a_notifications.models import Notification
 from a_userauth.models import CustomUser
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
+from a_work.models import Work
 from a_work.permissions import IsAdmin
+
 
 class AssignWorkView(APIView):
     permission_classes = [IsAuthenticated, IsAdmin]
@@ -33,6 +37,16 @@ class AssignWorkView(APIView):
 
         work.assigned_to=writer_to_assign
         work.save()
+        # adding a notification
+        notification=Notification.objects.create(
+            type="Assigned Work",
+            message="work has been has been assigned",
+            triggered_by=request.user,
+            work=work
+            )
+        admins=get_admins()
+        notification.users.add(*admins)
+        notification.users.add(writer_to_assign)
         return Response({'message':'Work has been assigned successfully.'})
         
         

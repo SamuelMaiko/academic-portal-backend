@@ -1,8 +1,11 @@
-from django.db import models
-from django.conf import settings
-from api.models import BaseModel 
 import random
 import string
+
+from django.conf import settings
+from django.db import models
+
+from api.models import BaseModel
+
 
 class Work(BaseModel):
     WORK_CHOICES=[
@@ -50,12 +53,14 @@ class Work(BaseModel):
         blank=True
         )
     is_submitted = models.BooleanField(default=False)
-    # has_writer = models.BooleanField(default=False)
     revoked_by = models.ManyToManyField(
         settings.AUTH_USER_MODEL, 
         through='RevokedWork', 
         related_name='revoked_work'
         )
+    # normalization required
+    uptaken_is_read = models.BooleanField(default=False)
+    assigned_is_read = models.BooleanField(default=False)
     
 
     class Meta:

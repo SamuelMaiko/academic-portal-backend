@@ -3,11 +3,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from a_work.models import Work
-from a_work.permissions import IsAdmin  # Adjust import as per your actual permissions setup
-from a_work.serializers import CreateWorkSerializer  # Adjust serializer as needed
+from a_work.permissions import IsAdmin 
+from a_work.serializers import CreateWorkSerializer  
 
 class DeleteWorkView(APIView):
-    permission_classes = [IsAuthenticated, IsAdmin]  # Adjust permissions as needed
+    permission_classes = [IsAuthenticated, IsAdmin] 
 
     def get_object(self, pk):
         try:
