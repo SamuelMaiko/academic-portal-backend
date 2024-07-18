@@ -1,6 +1,8 @@
 # serializers.py
 from rest_framework import serializers
+
 from a_profile.models import Profile
+
 
 class ProfileSerializer(serializers.ModelSerializer):
     registration_number=serializers.CharField(source='user.registration_number')
@@ -9,4 +11,4 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model=Profile
-        fields=['profile_picture','bio','first_name', 'last_name','registration_number','county', ]
+        fields=['profile_picture','bio','first_name', 'last_name','registration_number','country','county' ]

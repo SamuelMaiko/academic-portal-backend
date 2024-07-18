@@ -1,16 +1,17 @@
+from django.conf import settings
 from django.contrib.auth import authenticate, login
+from django.shortcuts import get_object_or_404
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
+from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from rest_framework import status
 from rest_framework.views import APIView
-from a_userauth.serializers import UserSerializer
-from rest_framework.authtoken.models import Token
+
 from a_userauth.models import CustomUser
-from django.conf import settings
+from a_userauth.serializers import UserSerializer
 from a_userauth.signals import send_otp_signal
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
 
 
 class LoginView(APIView):
@@ -108,4 +109,4 @@ class LoginView(APIView):
             return Response(response_dict, status=status.HTTP_200_OK)
         # If user returns NONE = wrong credentials
         else:
-            return Response({"error": "Invalid email or password"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Invalid registration number or password"}, status=status.HTTP_404_NOT_FOUND)

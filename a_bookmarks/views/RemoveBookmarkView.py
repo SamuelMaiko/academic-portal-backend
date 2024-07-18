@@ -1,9 +1,11 @@
-from rest_framework import status, permissions
+from django.db import IntegrityError
+from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
 from a_bookmarks.models import Bookmark
-from django.db import IntegrityError
 from a_work.models import Work
+
 
 class RemoveBookmarkView(APIView):
     permission_classes = [permissions.IsAuthenticated]

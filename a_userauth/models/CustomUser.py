@@ -1,10 +1,12 @@
+from django.contrib.auth.models import AbstractBaseUser, AbstractUser, PermissionsMixin
 from django.db import models
-from django.contrib.auth.models import AbstractUser, AbstractBaseUser, PermissionsMixin
-from api.models import BaseModel
-from a_userauth.managers import CustomUserManager
 from django.utils import timezone
-from a_work.models import Work
+
 from a_bookmarks.models import Bookmark
+from a_userauth.managers import CustomUserManager
+from a_work.models import Work
+from api.models import BaseModel
+
 
 class CustomUser(AbstractBaseUser, PermissionsMixin, BaseModel):
     ROLE_CHOICES=[

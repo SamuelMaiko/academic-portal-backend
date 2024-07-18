@@ -8,4 +8,5 @@ urlpatterns = [
     path('bookmarks/', include('a_bookmarks.urls')),
     path('submissions/', include('a_submissions.urls')),
     path('revisions/', include('a_revisions.urls')),
+    path('accounts/', include('a_accounts.urls')),
 ]

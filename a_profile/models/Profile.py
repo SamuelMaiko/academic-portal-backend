@@ -1,6 +1,8 @@
-from django.db import models
 from django.conf import settings
-from api.models import BaseModel  
+from django.db import models
+
+from api.models import BaseModel
+
 
 class Profile(BaseModel):
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
@@ -8,7 +10,7 @@ class Profile(BaseModel):
     phone_number = models.CharField(max_length=20, blank=True)
     country = models.CharField(max_length=100, blank=True)
     county = models.CharField(max_length=100, blank=True)
-    linkedin=models.URLField(null=True)
+    linkedin=models.URLField(null=True, blank=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
 
     class Meta:
