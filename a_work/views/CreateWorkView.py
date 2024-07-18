@@ -27,9 +27,16 @@ class CreateWorkView(APIView):
                     triggered_by=request.user,
                     work=work
                     )
-                admins=get_admins()
-                notification.users.add(*admins)
                 notification.users.add(assigned_to)
+                # Notify admins
+                admins=get_admins()
+                new_notification=Notification.objects.create(
+                    type="System Notification",
+                    message="work has been has been assigned",
+                    triggered_by=request.user,
+                    work=work
+                    )
+                new_notification.users.add(*admins)
                 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

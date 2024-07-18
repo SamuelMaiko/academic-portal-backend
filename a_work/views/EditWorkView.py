@@ -13,15 +13,13 @@ from a_work.serializers import CreateWorkSerializer
 class EditWorkView(APIView):
     permission_classes = [IsAuthenticated, IsAdmin] 
 
-    def get_object(self, pk):
+    def put(self, request, id, format=None):
         try:
-            return Work.objects.get(pk=pk)
+            work= Work.objects.get(pk=id)
         except Work.DoesNotExist:
             return Response({'error':'work matching query does not exist.'}, status=status.HTTP_404_NOT_FOUND)
-
-    def put(self, request, id, format=None):
+            
         self.check_object_permissions(request, request.user)
-        work = self.get_object(id)
         previous_writer=work.writer
         serializer = CreateWorkSerializer(work, data=request.data)
         if serializer.is_valid():
