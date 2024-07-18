@@ -9,4 +9,5 @@ urlpatterns = [
     path('submissions/', include('a_submissions.urls')),
     path('revisions/', include('a_revisions.urls')),
     path('accounts/', include('a_accounts.urls')),
+    path('notifications/', include('a_notifications.urls')),
 ]

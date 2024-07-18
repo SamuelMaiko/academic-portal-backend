@@ -32,7 +32,6 @@ class Notification(BaseModel):
         through='NotificationUser',
         blank=True,
     )
-    is_read = models.BooleanField(default=False)
     work = models.ForeignKey(
         Work, 
         on_delete=models.CASCADE, 
@@ -43,6 +42,7 @@ class Notification(BaseModel):
 
     class Meta:
         db_table = "notifications"
+        ordering = ('-created_at',)
 
     def __str__(self):
         return f'Notification for {self.user.registration_number if self.user else None} - {self.get_type_display()}'
