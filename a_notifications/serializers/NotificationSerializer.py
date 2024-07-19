@@ -11,7 +11,7 @@ class NotificationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model=Notification
-        fields=['id','message','type','triggered_by','is_read','work']
+        fields=['id','message','type','triggered_by','is_read','work','created_at']
         
     def get_is_read(self, obj):
         user=self.context["request"].user

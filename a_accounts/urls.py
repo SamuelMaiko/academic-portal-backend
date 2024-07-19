@@ -1,5 +1,9 @@
 from django.urls import path
 
+from a_profile import views as prof_views
+from a_submissions import views as sub_views
+from a_work import views as work_views
+
 from . import views
 
 urlpatterns = [
@@ -10,5 +14,11 @@ urlpatterns = [
     path('<int:id>/delete/', views.DeleteAccountView.as_view(), name='delete-account'),
     path('<int:id>/deactivate/', views.DeactivateAccountView.as_view(), name='deactivate-account'),
     path('<int:id>/activate/', views.ActivateAccountView.as_view(), name='activate-account'),
+    path('<int:id>/uptaken/', work_views.UserUptakenWorkView.as_view(), name='uptaken-work'),
+    path('<int:id>/assigned/', work_views.UserAssignedWorkView.as_view(), name='assigned-work'),
+    path('<int:id>/revoked/', work_views.UserRevokedWorkView.as_view(), name='revoked-work'),
+    path('<int:id>/quality-issues-work/', work_views.UserQualityIssuesWorkView.as_view(), name='quality-issues-work'),
+    path('<int:id>/analytics/', prof_views.UserAnalyticsView.as_view(), name='analytics'),
+    path('<int:id>/submitted-work/', sub_views.UserSubmittedWorkView.as_view(), name='submitted-work'),
     path('<int:id>/reset-password/', views.ResetPasswordView.as_view(), name='reset-password'),
 ]

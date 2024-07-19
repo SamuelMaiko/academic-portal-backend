@@ -65,6 +65,7 @@ class Work(BaseModel):
 
     class Meta:
         db_table = "work"  
+        ordering = ("-created_at",)
 
     def __str__(self):
         return f'Work {self.work_code}'

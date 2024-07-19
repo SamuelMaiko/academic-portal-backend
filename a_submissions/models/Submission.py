@@ -1,7 +1,9 @@
-from django.db import models
 from django.conf import settings
-from api.models import BaseModel 
+from django.db import models
+
 from a_work.models import Work
+from api.models import BaseModel
+
 
 class Submission(BaseModel):
     message = models.TextField()
@@ -11,7 +13,8 @@ class Submission(BaseModel):
 
     class Meta:
         db_table = "submissions"  
+        ordering = ("-created_at",)
 
     def __str__(self):
-        return f'Submission {self.pk} for work {self.work.work_code}'
+        return f'Submission {self.pk} for work {self.work.work_code} by {self.sender.registration_number}'
         

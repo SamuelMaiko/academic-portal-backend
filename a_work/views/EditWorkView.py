@@ -5,7 +5,8 @@ from rest_framework.views import APIView
 
 from a_accounts.helpers import get_admins
 from a_notifications.models import Notification
-from a_work.models import Work
+from a_submissions.models import Submission
+from a_work.models import DefaultWork, Work
 from a_work.permissions import IsAdmin
 from a_work.serializers import CreateWorkSerializer
 
@@ -45,5 +46,16 @@ class EditWorkView(APIView):
                     work=work
                     )
                 new_notification.users.add(new_writer)
+                
+            # updating default work
+            if previous_writer!=new_writer:
+                submission=Submission.objects.filter(work=work, sender=previous_writer)
+                if submission.exists():
+                    DefaultWork.objects.create(
+                        user=request.user,
+                        work=work,
+                        type="QualityIssues"
+                        )
+                    
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -4,8 +4,14 @@ from .CreateWorkView import CreateWorkView
 from .DeleteWorkView import DeleteWorkView
 from .EditWorkView import EditWorkView
 from .MarkAsReadView import MarkAsReadView
+from .QualityIssuesWorkView import QualityIssuesWorkView
+from .RevokedWorkView import RevokedWorkView
 from .RevokeWorkView import RevokeWorkView
 from .UptakenWorkView import UptakenWorkView
 from .UptakeWorkView import UptakeWorkView
+from .UserAssignedWorkView import UserAssignedWorkView
+from .UserQualityIssuesWorkView import UserQualityIssuesWorkView
+from .UserRevokedWorkView import UserRevokedWorkView
+from .UserUptakenWorkView import UserUptakenWorkView
 from .WorkDetailView import WorkDetailView
 from .WorkView import WorkView
