@@ -33,6 +33,19 @@ class UptakeWorkView(APIView):
             )
         admins=get_admins()
         notification.users.add(*admins)
+        
+        # Get users who bookmarked the work, excluding the current user
+        users=work.bookmarked_by.exclude(id=request.user.id)
+        
+        notifTwo=Notification.objects.create(
+            type="System Notification",
+            message="The work you bookmarked has been taken by another user",
+            triggered_by=request.user,
+            work=work,
+            )
+        notifTwo.users.add(*users)
+        # Clear bookmarks
+        work.bookmarked_by.clear()
 
         return Response({'message':'Work has been uptaken successfully.'})
         

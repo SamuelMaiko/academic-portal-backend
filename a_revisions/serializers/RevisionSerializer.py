@@ -6,10 +6,11 @@ from a_revisions.models import Revision
 class RevisionSerializer(serializers.ModelSerializer):
     work=serializers.SerializerMethodField()
     reviewer=serializers.SerializerMethodField()
+    is_read=serializers.SerializerMethodField()
 
     class Meta:
         model = Revision
-        fields = ['id', 'submit_before','work', 'status','reviewer','created_at' ]
+        fields = ['id', 'submit_before','work', 'status','reviewer','is_read','created_at' ]
 
     def get_work(self, obj):
         return {
@@ -24,3 +25,7 @@ class RevisionSerializer(serializers.ModelSerializer):
             'first_name':obj.reviewer.first_name,
             'last_name':obj.reviewer.last_name,
         }
+
+    def get_is_read(self, obj):
+        request=self.context["request"]
+        return not obj.messages.exclude(sender=request.user).filter(is_read=False).exists()

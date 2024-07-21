@@ -16,4 +16,4 @@ class ReadAllNotificationsView(APIView):
     
     def post(self, request):
         NotificationUser.objects.filter(user=request.user, is_read=False).update(is_read=True)
-        return Response({'message':'all noifications marked as read.'})
+        return Response({'message':'all notifications marked as read.'})

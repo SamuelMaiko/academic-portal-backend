@@ -27,16 +27,17 @@ class EditWorkView(APIView):
             work=serializer.save() 
             new_writer=work.writer
             if previous_writer!=new_writer:
-                # adding a notification
-                notification=Notification.objects.create(
-                    type="Assigned Work",
-                    message="work has been has been reassigned",
-                    triggered_by=request.user,
-                    work=work
-                    )
-                admins=get_admins()
-                notification.users.add(*admins)
-                notification.users.add(previous_writer)
+                if previous_writer is not None:
+                    # adding a notification
+                    notification=Notification.objects.create(
+                        type="Assigned Work",
+                        message="work has been has been reassigned",
+                        triggered_by=request.user,
+                        work=work
+                        )
+                    admins=get_admins().exclude(id=request.user.id)
+                    notification.users.add(*admins)
+                    notification.users.add(previous_writer)
 
                 # notification to new writer
                 new_notification=Notification.objects.create(
@@ -47,7 +48,26 @@ class EditWorkView(APIView):
                     )
                 new_notification.users.add(new_writer)
                 
-            # updating default work
+                # SET WORK to unread
+                work.uptaken_is_read=False
+                work.assigned_is_read=False
+                work.save()
+
+                # ____________________________________________ handle users who bookmarked it
+                # Get users who bookmarked the work, excluding the current user
+                users=work.bookmarked_by.exclude(id=new_writer.id)
+                
+                notifTwo=Notification.objects.create(
+                    type="System Notification",
+                    message="The work you bookmarked has been taken by another user",
+                    triggered_by=request.user,
+                    work=work,
+                    )
+                notifTwo.users.add(*users)
+                # Clear bookmarks
+                work.bookmarked_by.clear()
+                
+            # updating default work records
             if previous_writer!=new_writer:
                 submission=Submission.objects.filter(work=work, sender=previous_writer)
                 if submission.exists():

@@ -9,6 +9,7 @@ urlpatterns = [
     path('<int:id>/delete/',  views.DeleteRevisionView.as_view(), name="delete-revision"), 
     path('<int:id>/edit/',  views.EditRevisionView.as_view(), name="edit-revision"), 
     path('<int:id>/send-message/',  views.SendRevisionMessageView.as_view(), name="send-revision-message"), 
+    path('<int:id>/mark-messages-as-read/',  views.ReadAllRevisionMessagesView.as_view(), name="mark-messages-as-read"), 
     path('delete-message/<int:id>/',  views.DeleteRevisionMessageView.as_view(), name="delete-revision-message"), 
     path('edit-message/<int:id>/',  views.EditRevisionMessageView.as_view(), name="edit-revision-message"), 
 

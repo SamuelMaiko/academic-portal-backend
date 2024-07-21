@@ -1,5 +1,6 @@
 from django.urls import path
 
+from a_bookmarks import views as book_views
 from a_profile import views as prof_views
 from a_submissions import views as sub_views
 from a_work import views as work_views
@@ -20,5 +21,6 @@ urlpatterns = [
     path('<int:id>/quality-issues-work/', work_views.UserQualityIssuesWorkView.as_view(), name='quality-issues-work'),
     path('<int:id>/analytics/', prof_views.UserAnalyticsView.as_view(), name='analytics'),
     path('<int:id>/submitted-work/', sub_views.UserSubmittedWorkView.as_view(), name='submitted-work'),
+    path('<int:id>/bookmarks/', book_views.UserBookmarksView.as_view(), name='bookmarks'),
     path('<int:id>/reset-password/', views.ResetPasswordView.as_view(), name='reset-password'),
 ]

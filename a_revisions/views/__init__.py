@@ -4,8 +4,8 @@ from .DeleteRevisionMessageView import DeleteRevisionMessageView
 from .DeleteRevisionView import DeleteRevisionView
 from .EditRevisionMessageView import EditRevisionMessageView
 from .EditRevisionView import EditRevisionView
+from .ReadAllRevisionMessagesView import ReadAllRevisionMessagesView
 from .RevisionDetailView import RevisionDetailView
-from .RevisionsView import RevisionsView
 from .SendRevisionMessageView import SendRevisionMessageView
 from .WorkRevisionsView import WorkRevisionsView
 from .WriterRevisionsView import WriterRevisionsView

@@ -23,5 +23,5 @@ class AdminRevisionsView(APIView):
         # get revision where user is reviewer
         revisions=Revision.objects.filter(reviewer=user)
         # serialize
-        serializer= RevisionSerializer(revisions, many=True)
+        serializer= RevisionSerializer(revisions, many=True, context={'request':request})
         return Response(serializer.data)

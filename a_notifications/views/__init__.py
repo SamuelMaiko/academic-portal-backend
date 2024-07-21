@@ -1,3 +1,4 @@
 from .DeleteNotificationView import DeleteNotificationView
 from .NotificationsView import NotificationsView
 from .ReadAllNotificationsView import ReadAllNotificationsView
+from .UnreadNotificationsCountView import UnreadNotificationsCountView

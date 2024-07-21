@@ -58,7 +58,7 @@ class Work(BaseModel):
         through='RevokedWork', 
         related_name='revoked_work'
         )
-    # normalization required
+    # normalization required (later)
     uptaken_is_read = models.BooleanField(default=False)
     assigned_is_read = models.BooleanField(default=False)
     

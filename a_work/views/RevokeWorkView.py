@@ -27,7 +27,9 @@ class RevokeWorkView(APIView):
                 user=request.user,
                 work=work,
                 type="RevokedAssigned"
-                )    
+                )
+            # SET WORK to unread
+            work.assigned_is_read=False
         else:
             # means it was uptaken
             work.uptaken_by=None
@@ -36,6 +38,7 @@ class RevokeWorkView(APIView):
                 work=work,
                 type="RevokedUptaken"
                 )
+            work.uptaken_is_read=False
         work.save()
         return Response({'message':'Work has been revoked successfully.'})
         

@@ -1,3 +1,5 @@
+from .AllSubmissionsView import AllSubmissionsView
+from .ClaimSubmissionView import ClaimSubmissionView
 from .DeleteSubmissionsView import DeleteSubmissionsView
 from .EditSubmissionsView import EditSubmissionsView
 from .MySubmittedWorkView import MySubmittedWorkView

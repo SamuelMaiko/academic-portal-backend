@@ -22,6 +22,6 @@ class WriterRevisionsView(APIView):
         work_subquery=Work.objects.filter(Q(assigned_to=user) | Q(uptaken_by=user)).values_list('id',flat=True)
         # take only revisions where the writer's work is revised
         revisions=Revision.objects.filter(work_id__in=Subquery(work_subquery))
-        serializer= RevisionSerializer(revisions, many=True)
+        serializer= RevisionSerializer(revisions, many=True, context={'request':request})
         return Response(serializer.data)
     

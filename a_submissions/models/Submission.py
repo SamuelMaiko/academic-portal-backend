@@ -10,6 +10,8 @@ class Submission(BaseModel):
     file=models.FileField(upload_to='submission_files')
     sender=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name='submissions', null=True)
     work=models.ForeignKey(Work, on_delete=models.CASCADE, related_name='submissions')
+    is_claimed=models.BooleanField(default=False)
+    claimed_by=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name='claimed_submissions', null=True)
 
     class Meta:
         db_table = "submissions"  

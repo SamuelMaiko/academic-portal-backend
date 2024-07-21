@@ -15,6 +15,7 @@ class Notification(BaseModel):
         ('Uptaken Work', 'Uptaken Work'),
         ('Assigned Work', 'Assigned Work'),
         ('New Revision', 'New Revision'),
+        # ('Bookmark Taken', 'Bookmark Taken'),
     ]
 
     message = models.TextField()

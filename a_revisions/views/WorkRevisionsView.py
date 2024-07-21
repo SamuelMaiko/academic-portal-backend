@@ -19,5 +19,5 @@ class WorkRevisionsView(APIView):
         except Work.DoesNotExist:
             return Response({'error':'work matching query does not exist.'}, status=status.HTTP_404_NOT_FOUND)
         revisions=work.revisions
-        serializer=RevisionSerializer(revisions, many=True)
+        serializer=RevisionSerializer(revisions, many=True, context={'request':request})
         return Response(serializer.data)

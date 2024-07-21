@@ -10,14 +10,12 @@ from a_work.models import Work
 class RemoveBookmarkView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_object(self, work_id):
-        try:
-            return Work.objects.get(id=work_id)
-        except Work.DoesNotExist:
-            return Response({'error':'work matching query does not exist.'},status=status.HTTP_404_NOT_FOUND)
-        
     def delete(self, request, work_id):
-        work=self.get_object(work_id)
+        try:
+            work= Work.objects.get(id=work_id)
+        except Work.DoesNotExist:
+            return Response({'error':'work matching query does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        
         try:
             bookmark=Bookmark.objects.get(user=request.user, work=work)
         except Bookmark.DoesNotExist:
