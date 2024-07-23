@@ -1,5 +1,7 @@
 from django.urls import include, path
 
+from . import views
+
 urlpatterns = [
     path('auth/', include('a_userauth.urls')),
     path('onboarding/', include('a_onboarding.urls')),
@@ -10,4 +12,5 @@ urlpatterns = [
     path('revisions/', include('a_revisions.urls')),
     path('accounts/', include('a_accounts.urls')),
     path('notifications/', include('a_notifications.urls')),
+    path('preferences/', include('a_preferences.urls')),
 ]

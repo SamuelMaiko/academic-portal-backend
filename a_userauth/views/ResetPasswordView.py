@@ -1,14 +1,15 @@
+from django.utils import timezone
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from a_userauth.models import CustomUser
-from rest_framework import status
 from rest_framework.views import APIView
-from a_userauth.signals import send_otp_signal
+
 from a_userauth.HelperFunctions import generate_otp
-from a_userauth.models import EmailOTP
-from django.utils import timezone
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
+from a_userauth.models import CustomUser, EmailOTP
+from a_userauth.signals import send_otp_signal
+
 
 class ResetPasswordView(APIView):
     permission_classes = [AllowAny]
@@ -58,7 +59,11 @@ class ResetPasswordView(APIView):
         # updating the otp
         EmailOTP.objects.filter(user=user).update(otp=new_otp, timestamp=timezone.now())
         # signal to send otp to user's email
-        send_otp_signal.send(sender=None, user=user, type="first_time_request")
+        send_otp_signal.send(
+            sender=None,
+            user=user,
+            type="first_time_request"
+            )
         
         return Response({'message':"OTP sent to email"})
         

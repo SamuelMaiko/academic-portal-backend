@@ -1,6 +1,8 @@
-from django.core.mail import send_mail
 from django.conf import settings
+from django.core.mail import EmailMultiAlternatives, send_mail
 from django.dispatch import Signal, receiver
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 send_welcome_email_signal=Signal()
 
@@ -31,4 +33,13 @@ def send_welcome_email_signal_handler(sender, **kwargs):
     sender=settings.EMAIL_HOST_USER
     recipient_list=[user.email]
     
-    send_mail(subject, message, sender, recipient_list, fail_silently=True)
+    # Define HTML content
+    html_content = render_to_string('userauth/welcome_email_template.html', {'user': user})
+    text_content = strip_tags(html_content)  # Convert HTML to plain text
+    
+    email = EmailMultiAlternatives(subject, text_content, sender, recipient_list)
+    
+   # Attach the HTML content
+    email.attach_alternative(html_content, "text/html")
+
+    email.send()

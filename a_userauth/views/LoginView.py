@@ -8,6 +8,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from a_userauth.models import CustomUser
 from a_userauth.serializers import UserSerializer
@@ -100,13 +101,16 @@ class LoginView(APIView):
             response["details_filled"]=user.onboarding.details_filled
             response["profile_completed"]=user.onboarding.profile_completed
             response["password_changed"]=user.onboarding.password_changed
+            # jwt
+            refresh = RefreshToken.for_user(user)
 
             response_dict={
                 "user":response,
-                "token":token.key
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
                 }
                 
             return Response(response_dict, status=status.HTTP_200_OK)
         # If user returns NONE = wrong credentials
         else:
-            return Response({"error": "Invalid registration number or password"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Invalid registration number or password"}, status=status.HTTP_401_UNAUTHORIZED)

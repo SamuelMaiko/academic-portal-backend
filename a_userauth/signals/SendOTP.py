@@ -1,7 +1,10 @@
-from django.dispatch import Signal, receiver
-from a_userauth.models import EmailOTP
-from django.core.mail import send_mail
 from django.conf import settings
+from django.core.mail import EmailMultiAlternatives, send_mail
+from django.dispatch import Signal, receiver
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
+from a_userauth.models import EmailOTP
 
 send_otp_signal=Signal()
 
@@ -13,12 +16,24 @@ def send_otp_signal_handler(sender, **kwargs):
 
     if type=="new_otp_request":
         subject = 'Password Reset Request - Your New OTP Code'
-        message = f"Hi {user.first_name or user.email.split('@')[0] or user.registration_number},\n\nYou have requested a new OTP to reset your password. Use the following OTP code to reset your password:\n\n{otp}\n\nIf you did not request this, please ignore this email.\n\nBest regards,\nTechWave Team"
+        
     elif type=="first_time_request":
         subject = 'Password Reset Request - Your OTP Code'
-        message = f"Hi {user.first_name or user.email.split('@')[0] or user.registration_number},\n\nYou have requested to reset your password. Use the following OTP code to reset your password:\n\n{otp}\n\nIf you did not request this, please ignore this email.\n\nBest regards,\nTechWave Team"
+
     sender=settings.EMAIL_HOST_USER
     recipient_list=[user.email]
     
-    send_mail(subject, message, sender, recipient_list, fail_silently=False)
+    # Define HTML content
+    html_content = render_to_string('a_userauth/first_otp_reset_email.html', {
+        'user': user,
+        'otp': otp
+        })
+    text_content = strip_tags(html_content)  # Convert HTML to plain text
+    
+    email = EmailMultiAlternatives(subject, text_content, sender, recipient_list)
+    
+   # Attach the HTML content
+    email.attach_alternative(html_content, "text/html")
+
+    email.send()    
     

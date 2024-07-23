@@ -2,6 +2,8 @@ from .AssignedWorkView import AssignedWorkView
 from .AssignWorkView import AssignWorkView
 from .CreateWorkView import CreateWorkView
 from .DeleteWorkView import DeleteWorkView
+from .DownloadAllImagesView import download_images_as_zip
+from .DownloadImageView import download_image
 from .EditWorkView import EditWorkView
 from .MarkAsReadView import MarkAsReadView
 from .QualityIssuesWorkView import QualityIssuesWorkView

@@ -1,18 +1,17 @@
 from django.contrib.auth import authenticate, login
+from django.shortcuts import get_object_or_404
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from a_userauth.models import CustomUser, RegistrationCode
-from django.shortcuts import get_object_or_404
-from rest_framework import status
 from rest_framework.views import APIView
-from a_userauth.serializers import UserSerializer
+
 # from userauth.HelperFunctions import SendWelcomeEmail, SendAccountActivationEmail
 from a_userauth.HelperFunctions import create_otp_model
-from a_userauth.signals import send_otp_signal, email_account_credentials
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
-
-
+from a_userauth.models import CustomUser, RegistrationCode
+from a_userauth.serializers import UserSerializer
+from a_userauth.signals import email_account_credentials, send_otp_signal
 
 
 class RegistrationView(APIView):
@@ -72,8 +71,9 @@ class RegistrationView(APIView):
             return Response({'error':'registration code already used.'}, status=status.HTTP_400_BAD_REQUEST)
             
         # if not create an account
+        random_password=CustomUser.objects.make_random_password()
         new_user=CustomUser.objects.create()
-        new_user.set_password("1234")
+        new_user.set_password(random_password)
         new_user.save()
         
         # associate account with the code
@@ -84,7 +84,7 @@ class RegistrationView(APIView):
         email_account_credentials.send(
             sender=None,
             registration_number=new_user.registration_number,
-            password="1234",
+            password=random_password,
             email=email
             )
         # send a success 

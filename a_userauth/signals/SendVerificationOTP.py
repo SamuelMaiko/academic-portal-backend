@@ -1,7 +1,10 @@
-from django.dispatch import Signal, receiver
-from a_userauth.models import EmailOTP
-from django.core.mail import send_mail
 from django.conf import settings
+from django.core.mail import EmailMultiAlternatives, send_mail
+from django.dispatch import Signal, receiver
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
+from a_userauth.models import EmailOTP
 
 send_verification_otp=Signal()
 
@@ -27,6 +30,18 @@ def send_verification_otp_handler(sender, **kwargs):
     sender=settings.EMAIL_HOST_USER
     recipient_list=[user.email]
     
-    send_mail(subject, message, sender, recipient_list, fail_silently=False)
+   # Define HTML content
+    html_content = render_to_string('a_userauth/verify_email.html', {
+        'registration_number': user.registration_number,
+        'otp':otp
+        })
+    text_content = strip_tags(html_content) 
+    
+    email = EmailMultiAlternatives(subject, text_content, sender, recipient_list)
+    
+   # Attach the HTML content
+    email.attach_alternative(html_content, "text/html")
+
+    email.send()
     
     
