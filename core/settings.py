@@ -9,7 +9,9 @@ env = environ.Env(
     EMAIL_USE_TLS=(bool, False),
     EMAIL_USE_SSL=(bool, True),
     EMAIL_PORT=(int, 465),
-    DEBUG=(bool, False)
+    DEBUG=(bool, False),
+    DATABASE_PORT=(int,5432),
+    ALLOWED_HOSTS=(list,['localhost']),
 )
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +23,7 @@ SECRET_KEY =env('SECRET_KEY')
 
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -83,6 +85,14 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+    # 'default': {
+    #          'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #          'NAME': env('DATABASE_NAME'),
+    #          'USER': env('DATABASE_USER'),
+    #          'PASSWORD': env('DATABASE_PASSWORD'),
+    #          'HOST': env('DATABASE_HOST'),
+    #          'PORT': env('DATABASE_PORT'),
+    #      }
 }
 
 AUTH_PASSWORD_VALIDATORS = [

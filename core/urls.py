@@ -8,9 +8,15 @@ from rest_framework import permissions
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="Snippets API",
+      title="TechWave Writers API",
       default_version='v1',
-      description="Test description",
+      description=(
+                   "Welcome to the TechWave Writers API documentation. This API provides access to the various "
+          "features of the TechWave Writers platform, including endpoints for managing user accounts, "
+          "submissions, and work assignments. Use this documentation to understand the available endpoints, "
+          "parameters, and responses. The API is designed to support writer and admin functionalities in a "
+          "seamless and efficient manner."
+      ),
       terms_of_service="https://www.google.com/policies/terms/",
       contact=openapi.Contact(email="contact@snippets.local"),
       license=openapi.License(name="BSD License"),
