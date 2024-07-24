@@ -14,6 +14,80 @@ from a_work.serializers import WorkSerializer
 
 class WorkView(APIView):
     permission_classes = [IsAuthenticated]
+    
+    @swagger_auto_schema(
+        operation_description="Retrieves a list of work based on search parameters, including optional filters for words and deadlines.",
+        manual_parameters=[
+            openapi.Parameter(
+                'Authorization',
+                openapi.IN_HEADER,
+                description="Bearer token",
+                type=openapi.TYPE_STRING,
+                required=True
+            ),
+            openapi.Parameter(
+                name='search',
+                in_=openapi.IN_QUERY,
+                description='Search using the work codes',
+                type=openapi.TYPE_STRING,
+                required=False
+            ),
+            openapi.Parameter(
+                name='words',
+                in_=openapi.IN_QUERY,
+                description='Filter work by no. of words',
+                type=openapi.TYPE_STRING,
+                required=False
+            ),
+            openapi.Parameter(
+                name='deadline',
+                in_=openapi.IN_QUERY,
+                description='Filter work based on deadline. Options: "today", "tomorrow"',
+                type=openapi.TYPE_STRING,
+                required=False
+            ),
+        ],
+        responses={
+            200: openapi.Response(
+                description="List of work ",
+                examples={
+                    "application/json": [
+                            {
+                                "id": 8,
+                                "work_code": "WK1508",
+                                "deadline": "2024-07-17T15:00:00+03:00",
+                                "words": 2000,
+                                "type": "Reflection Paper",
+                                "created_at": "2024-07-17T11:03:54.820923+03:00",
+                                "is_bookmarked": False,
+                                "has_writer": False,
+                                "is_mine": False
+                            },
+                            {
+                                "id": 4,
+                                "work_code": "WK2304",
+                                "deadline": "2024-07-20T17:30:00+03:00",
+                                "words": 2000,
+                                "type": "Essay",
+                                "created_at": "2024-07-17T11:03:45.296038+03:00",
+                                "is_bookmarked": False,
+                                "has_writer": False,
+                                "is_mine": False
+                            },
+                    ]
+                }
+            ),
+            401: openapi.Response(
+                description="Unauthorized",
+                examples={
+                    "application/json": {
+                        "error": "Authentication credentials were not provided."
+                    }
+                }
+            ),
+        },
+        tags=['Work']
+    )
 
     def get(self, request):
         search_param=request.GET.get("search","")

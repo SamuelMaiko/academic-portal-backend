@@ -19,31 +19,52 @@ class RegistrationView(APIView):
     authentication_classes=[]
     
     @swagger_auto_schema(
-        operation_description="Register a new user and sends an OTP to verify the email.",
-        request_body=UserSerializer,  # Use your UserSerializer here
+        operation_description="Register a new user using a registration code and email. This endpoint creates a new account if the registration code is valid and not expired or used and emails the login credentials.",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=['registration_code', 'email'],
+            properties={
+                'registration_code': openapi.Schema(type=openapi.TYPE_STRING, description="The registration code provided for account creation."),
+                'email': openapi.Schema(type=openapi.TYPE_STRING, description="The email address for the new account.")
+            }
+        ),
         responses={
-            201: openapi.Response(
-                description="Created - Registration successful",
+            200: openapi.Response(
+                description="Registration successful.",
                 examples={
                     "application/json": {
-                        "message": "Registration successful, OTP sent.",
-                        "success": True
+                        "message": "Registration successful"
                     }
                 }
             ),
             400: openapi.Response(
-                description="Bad request - Invalid data provided or user with same email exists",
+                description="Bad Request",
                 examples={
                     "application/json": {
-                        "error": "A user with the same email exists",
-                        "success": False
+                        "error": "Provide registration_code, email."
+                    }
+                }
+            ),
+            404: openapi.Response(
+                description="Registration code not found.",
+                examples={
+                    "application/json": {
+                        "error": "Invalid registration code."
+                    }
+                }
+            ),
+            400: openapi.Response(
+                description="Expired or already used registration code.",
+                examples={
+                    "application/json": {
+                        "error": "Expired registration code or registration code already used."
                     }
                 }
             ),
         },
-        tags=['Registration']
+        tags=['Authentication']
     )
-
+    
     def post(self, request):
         # take reg code, email, 
         registration_code=request.data.get("registration_code")

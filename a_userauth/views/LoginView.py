@@ -18,17 +18,18 @@ from a_userauth.signals import send_otp_signal
 class LoginView(APIView):
     permission_classes = [AllowAny]
     authentication_classes=[]
-     
+    
     @swagger_auto_schema(
-        operation_description="""Logs a user in using their email and password and returns a token. 
-                        Sends an otp to email incase user account inactive.""",
+        operation_description="""Logs a user in using their registration number and password and returns a token.
+                                If the credentials are correct, it also returns user details and JWT tokens. 
+                                Otherwise, it returns an error message.""",
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                'email': openapi.Schema(type=openapi.TYPE_STRING),
-                'password': openapi.Schema(type=openapi.TYPE_STRING),
+                'registration_number': openapi.Schema(type=openapi.TYPE_STRING, description='The registration number of the user.'),
+                'password': openapi.Schema(type=openapi.TYPE_STRING, description='The password of the user.')
             },
-            required=['email', 'password']
+            required=['registration_number', 'password']
         ),
         responses={
             200: openapi.Response(
@@ -36,12 +37,14 @@ class LoginView(APIView):
                 examples={
                     "application/json": {
                         "user": {
-                            "username": "user1",
-                            "email": "user1@example.com",
-                            "first_name": "First",
-                            "last_name": "Last"
+                            "registration_number": "TW5303",
+                            "email": "peterkenyatta631@gmail.com",
+                            "details_filled": True,
+                            "profile_completed": False,
+                            "password_changed": False
                         },
-                        "token": "abc123"
+                        "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcyMjQzMTcxMiwiaWF0IjoxNzIxODI2OTEyLCJqdGkiOiIyODM1ZGVmMWU1Nzg0MTNmYTBmYjdhOTc2NGUxOWFjZSIsInVzZXJfaWQiOjN9.6268BEgjgGrTTL0aUk3PKrudOnT6WE1HDyRXMB1jHcw",
+                        "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIxODQ1ODEyLCJpYXQiOjE3MjE4MjY5MTIsImp0aSI6IjBhMDA1YzEzY2EzMTQyMzFhZTA0NjcxNGU0NDBjYzBiIiwidXNlcl9pZCI6M30.BdQfpLMqU2VZWYvr3DbJT35MCMf8DpAtLEVUSLgAxuk"
                     }
                 }
             ),
@@ -49,29 +52,21 @@ class LoginView(APIView):
                 description="Bad Request",
                 examples={
                     "application/json": {
-                        "error": "Provide email password."
+                        "error": "Provide registration_number, password."
                     }
                 }
             ),
-            403: openapi.Response(
-                description="Forbidden",
+            401: openapi.Response(
+                description="Unauthorized",
                 examples={
                     "application/json": {
-                        "error": "User account is inactive. Please verify your email."
+                        "error": "Invalid registration number or password"
                     }
                 }
-            ),
-            404: openapi.Response(
-                description="Not found",
-                examples={
-                    "application/json": {
-                        "error": "Invalid email or password"
-                    }
-                }
-            ),
+            )
         },
         tags=['Authentication']
-    )
+    )    
     
     def post(self, request):
         registration_number=request.data.get('registration_number')

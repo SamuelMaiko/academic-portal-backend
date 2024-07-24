@@ -23,6 +23,6 @@ urlpatterns = [
     path('<int:id>/submissions/',  sub_views.WorkSubmissionsView.as_view(), name="work-submissions"),
     path('<int:id>/revisions/',  rev_views.WorkRevisionsView.as_view(), name="work-revisions"),
     path('<int:id>/create-revision/',  rev_views.CreateRevisionView.as_view(), name="create-revision"),
-    path('download/<int:image_id>/', views.download_image, name='download-work-image'),
-    path('download-images/<int:work_id>/', views.download_images_as_zip, name='download-all-images-zip'),
+    path('download/<int:image_id>/', views.DownloadWorkImageView.as_view(), name='download-work-image'),
+    path('download-images/<int:work_id>/', views.DownloadImagesZipView.as_view(), name='download-all-images-zip'),
 ]

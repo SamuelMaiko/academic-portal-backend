@@ -12,6 +12,44 @@ from a_work.models import DefaultWork
 class AnalyticsView(APIView):
     permission_classes = [IsAuthenticated]
     
+    @swagger_auto_schema(
+        operation_description="Retrieve analytics data for the authenticated user.",
+        responses={
+            200: openapi.Response(
+                description="Analytics data retrieved successfully.",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'submitted_work': openapi.Schema(type=openapi.TYPE_INTEGER, description='Number of submitted works'),
+                        'words_written': openapi.Schema(type=openapi.TYPE_INTEGER, description='Total words written'),
+                        'assigned_work': openapi.Schema(type=openapi.TYPE_INTEGER, description='Number of assigned works'),
+                        'uptaken_work': openapi.Schema(type=openapi.TYPE_INTEGER, description='Number of uptaken works'),
+                        'revoked_work': openapi.Schema(type=openapi.TYPE_INTEGER, description='Number of revoked works'),
+                        'quality_issues': openapi.Schema(type=openapi.TYPE_INTEGER, description='Number of quality issues')
+                    },
+                    example={
+                        'submitted_work': 5,
+                        'words_written': 1200,
+                        'assigned_work': 3,
+                        'uptaken_work': 2,
+                        'revoked_work': 1,
+                        'quality_issues': 0
+                    }
+                )
+            ),
+        },
+        manual_parameters=[
+            openapi.Parameter(
+                'Authorization',
+                openapi.IN_HEADER,
+                description="Bearer token for authentication",
+                type=openapi.TYPE_STRING,
+                required=True
+            )
+        ],
+        tags=['Profile']
+    )
+
     def get(self, request):
         user=request.user
         no_submitted=user.submissions.values("work").distinct().count()

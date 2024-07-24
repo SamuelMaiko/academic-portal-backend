@@ -1,32 +1,32 @@
-from rest_framework.views import APIView    
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework import status
-from a_userauth.models import EmailOTP
-from a_userauth.HelperFunctions import generate_otp
-from a_userauth.signals import send_otp_signal
-from a_userauth.models import CustomUser
-from rest_framework.permissions import AllowAny
 from django.utils import timezone
-from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from a_userauth.HelperFunctions import generate_otp
+from a_userauth.models import CustomUser, EmailOTP
+from a_userauth.signals import send_otp_signal
+
 
 class NewOtpGenerationView(APIView):
     permission_classes = [AllowAny]
     authentication_classes=[]
-        
+    
     @swagger_auto_schema(
-        operation_description="Generates a new OTP and sends it to the user's email.",
+        operation_description="Generates and sends a new OTP to the user's email for password reset.",
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                'email': openapi.Schema(type=openapi.TYPE_STRING, description='Email of the user'),
+                'email': openapi.Schema(type=openapi.TYPE_STRING, description='Email of the user requesting a new OTP'),
             },
             required=['email']
         ),
         responses={
             200: openapi.Response(
-                description="Ok",
+                description="New OTP generated and sent successfully.",
                 examples={
                     "application/json": {
                         "message": "OTP sent to email",
@@ -35,7 +35,7 @@ class NewOtpGenerationView(APIView):
                 }
             ),
             400: openapi.Response(
-                description="Bad Request",
+                description="Bad request",
                 examples={
                     "application/json": {
                         "error": "Email not provided"
@@ -43,7 +43,7 @@ class NewOtpGenerationView(APIView):
                 }
             ),
             404: openapi.Response(
-                description="Not Found",
+                description="Not found",
                 examples={
                     "application/json": {
                         "error": "User with email does not exist"
@@ -51,9 +51,10 @@ class NewOtpGenerationView(APIView):
                 }
             ),
         },
-        tags=['Forgot Password', 'Registration']
+        tags=['Forgot Password']
     )
-    
+
+        
     def post(self, request):
         email=request.data.get("email")
         

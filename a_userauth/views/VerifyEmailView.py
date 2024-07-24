@@ -12,18 +12,26 @@ class VerifyEmailView(APIView):
     permission_classes = [IsAuthenticated]
     
     @swagger_auto_schema(
-        operation_description="Receives the OTP and verifys the user's email.",
+        operation_description="Verifies the email of the user by validating the OTP sent to their email.",
+        manual_parameters=[
+            openapi.Parameter(
+                'Authorization',
+                openapi.IN_HEADER,
+                description="Bearer token",
+                type=openapi.TYPE_STRING,
+                required=True
+            ),
+        ],
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
-            required=['email', 'otp'],
             properties={
-                'email': openapi.Schema(type=openapi.TYPE_STRING, description='User email'),
-                'otp': openapi.Schema(type=openapi.TYPE_STRING, description='OTP sent to user email'),
-            }
+                'otp': openapi.Schema(type=openapi.TYPE_STRING, description='OTP sent to the user\'s email'),
+            },
+            required=['otp']
         ),
         responses={
             200: openapi.Response(
-                description="OK - Email verified successfully",
+                description="Successful OTP verification",
                 examples={
                     "application/json": {
                         "message": "OTP verification successful.",
@@ -32,35 +40,19 @@ class VerifyEmailView(APIView):
                 }
             ),
             400: openapi.Response(
-                description="Bad Request - Invalid OTP provided or OTP expired",
+                description="Bad request",
                 examples={
-                    "application/json": [{
-                        "example1":{
-                            "error":"Invalid OTP provided"
-                        },
-                        "example2":{
-                            "error":"OTP has expired. Request for new one."
-                        },
-                        "example3":{
-                            "error":"Email not provided"
-                        },
-                        "example4":{
-                            "error":"OTP not provided"
+                    "application/json": [
+                        {
+                            "error": "OTP not provided",
+                            "error": "OTP has expired. Request for new one.",
+                            "error": "Invalid OTP provided"
                         }
-                    }]
+                    ]
                 }
-            ),
-            404: openapi.Response(
-                description="Not Found - User with provided email not found",
-                examples={
-                    "application/json": {
-                        "error": "User with email doesn't exist",
-                        "success": False
-                    }
-                }
-            ),
+            )
         },
-        tags=['Registration']
+        tags=['Email Verification']
     )
     
     def post(self, request):

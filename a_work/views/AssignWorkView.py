@@ -14,6 +14,71 @@ from a_work.permissions import IsAdmin
 
 class AssignWorkView(APIView):
     permission_classes = [IsAuthenticated, IsAdmin]
+    
+    @swagger_auto_schema(
+        operation_description="Assigns a work to a specific writer. Only admins can use this endpoint.",
+        manual_parameters=[
+            openapi.Parameter(
+                name='Authorization',
+                in_=openapi.IN_HEADER,
+                type=openapi.TYPE_STRING,
+                description='Bearer token for authentication',
+                required=True
+            ),
+            openapi.Parameter(
+                name='id',
+                in_=openapi.IN_PATH,
+                type=openapi.TYPE_INTEGER,
+                description='ID of the work to assign',
+                required=True
+            ),
+        ],
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'writer': openapi.Schema(
+                    type=openapi.TYPE_INTEGER,
+                    description='ID of the writer to whom the work will be assigned'
+                )
+            },
+            required=['writer']
+        ),
+        responses={
+            200: openapi.Response(
+                description="Success",
+                examples={
+                    "application/json": {
+                        "message": "Work has been assigned successfully."
+                    }
+                }
+            ),
+            400: openapi.Response(
+                description="Bad Request",
+                examples={
+                    "application/json": {
+                        "error": "Provide writer"
+                    }
+                }
+            ),
+            403: openapi.Response(
+                description="Permission Denied",
+                examples={
+                    "application/json": {
+                        "detail": "You do not have permission to perform this action."
+                    }
+                }
+            ),
+            404: openapi.Response(
+                description="Not Found",
+                examples={
+                    "application/json": {
+                        "error": "Work matching query does not exist."
+                    }
+                }
+            ),
+        },
+        tags=['Work']
+    )
 
     def post(self, request, id):
         writer=request.data.get('writer')

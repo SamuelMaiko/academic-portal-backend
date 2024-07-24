@@ -1,3 +1,5 @@
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
@@ -13,6 +15,83 @@ from a_work.models import Work
 
 class SendRevisionMessageView(APIView):
     permission_classes = [IsAuthenticated]
+    
+    @swagger_auto_schema(
+        operation_description="Send a message related to a specific revision by ID.",
+        manual_parameters=[
+            openapi.Parameter(
+                'Authorization',
+                openapi.IN_HEADER,
+                description="Bearer token",
+                type=openapi.TYPE_STRING,
+                required=True
+            ),
+            openapi.Parameter(
+                'id',
+                openapi.IN_PATH,
+                description="ID of the revision to add the message to.",
+                type=openapi.TYPE_INTEGER,
+                required=True
+            ),
+        ],
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'message': openapi.Schema(type=openapi.TYPE_STRING, description='Message content'),
+                'file': openapi.Schema(type=openapi.TYPE_STRING, description='Optional file', format='binary'),
+                'image': openapi.Schema(type=openapi.TYPE_STRING, description='Optional image', format='binary'),
+            },
+            required=['message']
+        ),
+        responses={
+            200: openapi.Response(
+                description="Message successfully sent.",
+                examples={
+                    "application/json": {
+                        "id": 35,
+                        "message": "Great",
+                        "file": None,
+                        "image": "http://localhost:8000/media/revision_message_images/wallpaperflare.com_wallpaper_1.jpg",
+                        "is_read": False,
+                        "sender": {
+                            "id": 1,
+                            "registration_number": "TW9801",
+                            "first_name": "Sam",
+                            "last_name": "Maiko"
+                        },
+                        "revision": 3,
+                        "is_mine": True,
+                        "created_at": "2024-07-24T14:36:36.718029+03:00"
+                    }
+                }
+            ),
+            400: openapi.Response(
+                description="Bad Request",
+                examples={
+                    "application/json": {
+                        "message": ["This field is required."]
+                    }
+                }
+            ),
+            404: openapi.Response(
+                description="Not Found",
+                examples={
+                    "application/json": {
+                        "error": "Revision matching query does not exist."
+                    }
+                }
+            ),
+            401: openapi.Response(
+                description="Unauthorized",
+                examples={
+                    "application/json": {
+                        "detail": "Authentication credentials were not provided."
+                    }
+                }
+            ),
+        },
+        tags=['Revisions']
+    )
 
     def post(self, request,id):
         try:

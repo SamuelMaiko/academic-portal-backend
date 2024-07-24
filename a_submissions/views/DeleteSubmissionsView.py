@@ -12,6 +12,56 @@ from a_submissions.serializers import SubmissionSerializer
 
 class DeleteSubmissionsView(APIView):
     permission_classes = [IsAuthenticated, IsSubmissionSender]
+    
+    @swagger_auto_schema(
+        operation_description="Delete a specific submission by ID. Accessible only by the sender of the submission.",
+        manual_parameters=[
+            openapi.Parameter(
+                'Authorization',
+                openapi.IN_HEADER,
+                description="Bearer token",
+                type=openapi.TYPE_STRING,
+                required=True
+            ),
+            openapi.Parameter(
+                'id',
+                openapi.IN_PATH,
+                description="ID of the submission to be deleted.",
+                type=openapi.TYPE_INTEGER,
+                required=True
+            ),
+        ],
+        responses={
+            204: openapi.Response(
+                description="Submission successfully deleted."
+            ),
+            404: openapi.Response(
+                description="Submission not found.",
+                examples={
+                    "application/json": {
+                        "error": "Submission matching query does not exist."
+                    }
+                }
+            ),
+            403: openapi.Response(
+                description="Permission Denied",
+                examples={
+                    "application/json": {
+                        "detail": "You do not have permission to perform this action."
+                    }
+                }
+            ),
+            401: openapi.Response(
+                description="Unauthorized",
+                examples={
+                    "application/json": {
+                        "detail": "Authentication credentials were not provided."
+                    }
+                }
+            ),
+        },
+        tags=['Submissions']
+    )
 
     def delete(self, request, id):      
         try:

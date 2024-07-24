@@ -15,6 +15,71 @@ from a_work.permissions import IsAdmin
 class ClaimSubmissionView(APIView):
     permission_classes = [IsAuthenticated, IsAdmin]
     
+    @swagger_auto_schema(
+        operation_description="Enables authenticated admin to claim a submission they wish to review by ID.",
+        manual_parameters=[
+            openapi.Parameter(
+                'Authorization',
+                openapi.IN_HEADER,
+                description="Bearer token",
+                type=openapi.TYPE_STRING,
+                required=True
+            ),
+            openapi.Parameter(
+                'id',
+                openapi.IN_PATH,
+                description="ID of the submission to be claimed.",
+                type=openapi.TYPE_INTEGER,
+                required=True
+            ),
+        ],
+        responses={
+            200: openapi.Response(
+                description="Submission claimed.",
+                examples={
+                    "application/json": [
+                            {
+                                'message':'submission claimed successfully.'
+                            },
+                    ]
+                }
+            ),
+            400: openapi.Response(
+                description="Bad Request",
+                examples={
+                    "application/json": {
+                        'error':'submission already claimed.'
+                    }
+                }
+            ),
+            401: openapi.Response(
+                description="Unauthorized",
+                examples={
+                    "application/json": {
+                        "detail": "Authentication credentials were not provided."
+                    }
+                }
+            ),
+            403: openapi.Response(
+                description="Permission Denied",
+                examples={
+                    "application/json": {
+                        "detail": "You do not have permission to perform this action."
+                    }
+                }
+            ),
+            404: openapi.Response(
+                description="Not Found",
+                examples={
+                    "application/json": {
+                        'error':'submission matching query does not exist.'
+                    }
+                }
+            ),
+        },
+        tags=['Submissions']
+    )
+    
     def post(self, request, id):
         self.check_object_permissions(request, request.user)
 

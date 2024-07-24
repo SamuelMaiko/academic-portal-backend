@@ -1,3 +1,5 @@
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -13,6 +15,69 @@ from a_work.serializers import CreateWorkSerializer
 
 class EditWorkView(APIView):
     permission_classes = [IsAuthenticated, IsAdmin] 
+    
+    @swagger_auto_schema(
+        operation_description="Edit an existing work entry.",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'deadline': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_DATETIME, description='Deadline for the work (ISO 8601 date-time format)'),
+                'words': openapi.Schema(type=openapi.TYPE_INTEGER, description='Required number of words'),
+                'type': openapi.Schema(type=openapi.TYPE_STRING, description='Type of the work'),
+                'assigned_to': openapi.Schema(type=openapi.TYPE_INTEGER, description='User ID of the person assigned to this work'),
+                'comment': openapi.Schema(type=openapi.TYPE_STRING, description='Additional comments or notes')
+            },
+            required=['deadline', 'words'],
+        ),
+        responses={
+            200: openapi.Response(
+                description="Work updated successfully",
+                examples={
+                    "application/json": {
+                        "id": 1,
+                        "deadline": "2024-07-17T15:00:00+03:00",
+                        "work_code": "WK5201",
+                        "words": 2500,
+                        "type": "Reflection Paper",
+                        "assigned_to": 1,
+                        "comment": "Works"
+                    }
+                }
+            ),
+            400: openapi.Response(
+                description="Bad request",
+                examples={
+                    "application/json": {
+                        "error": "Invalid data"
+                    }
+                }
+            ),
+            404: openapi.Response(
+                description="Not found",
+                examples={
+                    "application/json": {
+                        "error": "Work matching query does not exist."
+                    }
+                }
+            ),
+        },
+        manual_parameters=[
+            openapi.Parameter(
+                'Authorization', openapi.IN_HEADER,
+                description="Bearer token",
+                type=openapi.TYPE_STRING,
+                required=True
+                ),
+            openapi.Parameter(
+                name='id',
+                in_=openapi.IN_PATH,
+                description='ID of the work to be edited.',
+                type=openapi.TYPE_INTEGER,
+                required=True
+            ),
+        ],
+        tags=['Work']
+    )
 
     def put(self, request, id, format=None):
         try:

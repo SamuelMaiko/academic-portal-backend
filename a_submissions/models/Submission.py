@@ -7,7 +7,7 @@ from api.models import BaseModel
 
 class Submission(BaseModel):
     message = models.TextField()
-    file=models.FileField(upload_to='submission_files')
+    file=models.FileField(upload_to='submission_files/', null=True, blank=True)
     sender=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name='submissions', null=True)
     work=models.ForeignKey(Work, on_delete=models.CASCADE, related_name='submissions')
     is_claimed=models.BooleanField(default=False)

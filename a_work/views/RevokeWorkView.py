@@ -10,6 +10,53 @@ from a_work.models import DefaultWork, Work
 
 class RevokeWorkView(APIView):
     permission_classes = [IsAuthenticated]
+    
+    @swagger_auto_schema(
+        operation_description="Revokes work the user has been assigned or has uptaken. NOTE: The work is added to the user's default work",
+        manual_parameters=[
+            openapi.Parameter(
+                name='Authorization',
+                in_=openapi.IN_HEADER,
+                type=openapi.TYPE_STRING,
+                description='Bearer token for authentication',
+                required=True
+            ),
+            openapi.Parameter(
+                name='id',
+                in_=openapi.IN_PATH,
+                type=openapi.TYPE_INTEGER,
+                description='ID of the work to revoke',
+                required=True
+            )
+        ],
+        responses={
+            200: openapi.Response(
+                description="Success",
+                examples={
+                    "application/json": {
+                        "message": "Work has been revoked successfully."
+                    }
+                }
+            ),
+            400: openapi.Response(
+                description="Bad Request",
+                examples={
+                    "application/json": {
+                        "error": "Work not found in list of allocated work."
+                    }
+                }
+            ),
+            404: openapi.Response(
+                description="Not Found",
+                examples={
+                    "application/json": {
+                        "error": "Work matching query does not exist."
+                    }
+                }
+            ),
+        },
+        tags=['Work']
+    )
 
     def post(self, request, id):
         try:

@@ -1,31 +1,33 @@
+from django.contrib.auth.hashers import make_password
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status
-from a_userauth.models import CustomUser, EmailOTP
-from a_userauth.serializers import ResetPasswordSerializer 
-from django.contrib.auth.hashers import make_password
+
 from a_userauth.HelperFunctions import create_otp_model
-from rest_framework.permissions import AllowAny
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
+from a_userauth.models import CustomUser, EmailOTP
+from a_userauth.serializers import ResetPasswordSerializer
+
 
 class SubmitNewPasswordView(APIView):
     permission_classes = [AllowAny]
     authentication_classes=[]
     
     @swagger_auto_schema(
-        operation_description="Resets the user's password using the new password and the temporary token.",
+        operation_description="Submits a new password using a temporary token. Allows users to set a new password after verifying the OTP.",
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                'temp_token': openapi.Schema(type=openapi.TYPE_STRING, description='Temporary token sent to the user\'s email'),
-                'new_password': openapi.Schema(type=openapi.TYPE_STRING, description='New password for the user'),
+                'temp_token': openapi.Schema(type=openapi.TYPE_STRING, description='Temporary token received during OTP verification'),
+                'new_password': openapi.Schema(type=openapi.TYPE_STRING, description='New password to be set for the user'),
             },
             required=['temp_token', 'new_password']
         ),
         responses={
             200: openapi.Response(
-                description="Ok",
+                description="Password reset successfully.",
                 examples={
                     "application/json": {
                         "message": "Password reset successfully",
@@ -38,20 +40,15 @@ class SubmitNewPasswordView(APIView):
                 examples={
                     "application/json": [
                         {
-                            "example1":{
-                                "error":"Invalid token."
+                            "example1": {
+                                "error": "temp_token not provided"
                             },
-                            "example1":{
-                                "error": {
-                                    "temp_token": [
-                                        "This field is required."
-                                    ],
-                                    "new_password": [
-                                        "This field is required."
-                                    ],
-                                    # other possible errors
+                            "example2": {
+                                "error": "new_password not provided"
                             },
-                            },
+                            "example3": {
+                                "error": "Invalid token."
+                            }
                         }
                     ]
                 }
@@ -65,6 +62,12 @@ class SubmitNewPasswordView(APIView):
         if serializer.is_valid():
             temp_token=serializer.validated_data["temp_token"]
             new_password=serializer.validated_data["new_password"]
+
+            if not temp_token:
+                return Response({'error':'temp_token not provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+            if not new_password:
+                return Response({'error':'new_password not provided'}, status=status.HTTP_400_BAD_REQUEST)
 
             try:
                 email_otp_instance=EmailOTP.objects.get(temp_token=temp_token)

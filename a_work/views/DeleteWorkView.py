@@ -1,3 +1,5 @@
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -10,6 +12,34 @@ from a_work.serializers import CreateWorkSerializer
 
 class DeleteWorkView(APIView):
     permission_classes = [IsAuthenticated, IsAdmin] 
+    
+    @swagger_auto_schema(
+        operation_description="Delete a specific work.",
+        responses={
+            204: openapi.Response(
+                description="No content, work successfully deleted"
+            ),
+            404: openapi.Response(
+                description="Work not found",
+                examples={
+                    "application/json": {
+                        "error": "Work matching query does not exist."
+                    }
+                }
+            ),
+        },
+        manual_parameters=[
+            openapi.Parameter('Authorization', openapi.IN_HEADER, description="Bearer token", type=openapi.TYPE_STRING, required=True),
+            openapi.Parameter(
+                name='id',
+                in_=openapi.IN_PATH,
+                description='ID of the work to be deleted.',
+                type=openapi.TYPE_INTEGER,
+                required=True
+            ),
+        ],
+        tags=['Work']
+    )
 
 
     def delete(self, request, id, format=None):

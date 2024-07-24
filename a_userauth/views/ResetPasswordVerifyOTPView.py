@@ -1,17 +1,21 @@
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status
+
 from a_userauth.models import CustomUser, EmailOTP
-from rest_framework.permissions import AllowAny
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
+
 
 class ResetPasswordVerifyOTPView(APIView):
     permission_classes = [AllowAny]
     authentication_classes=[]
     
     @swagger_auto_schema(
-        operation_description="Verifies the OTP sent to email when forgotten password.",
+        operation_description="""Verifies the OTP sent to email for resetting the password.
+        NOTE: the temp_token returned is used when submitting new password.
+        """,
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
@@ -22,7 +26,7 @@ class ResetPasswordVerifyOTPView(APIView):
         ),
         responses={
             200: openapi.Response(
-                description="Ok",
+                description="OTP verification successful.",
                 examples={
                     "application/json": {
                         "temp_token": "temporary_token",
@@ -34,34 +38,20 @@ class ResetPasswordVerifyOTPView(APIView):
             400: openapi.Response(
                 description="Bad request",
                 examples={
-                    "application/json": [
-                        {
-                            "example1":{
-                                "error":"Email not provided"
-                            },
-                            "example2":{
-                                "error":"OTP not provided"
-                            },
-                            "example3":{
-                                "error":"Invalid OTP provided"
-                            },
-                            "example4":{
-                                "message":"OTP has expired. Request for new one."
-                            },
-                        }    
-                    ]
+                    "application/json": {
+                        "error": "Email not provided",
+                        "error": "OTP not provided",
+                        "error": "Invalid OTP provided",
+                        "error": "OTP has expired. Request for new one."
+                    }
                 }
             ),
             404: openapi.Response(
                 description="Not found",
                 examples={
-                    "application/json": [
-                        {
-                            "example1":{
-                                "error":"user with email doesn't exist"
-                            }
-                        }
-                    ]
+                    "application/json": {
+                        "error": "User with email doesn't exist"
+                    }
                 }
             ),
         },
