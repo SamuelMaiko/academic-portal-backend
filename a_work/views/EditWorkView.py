@@ -1,0 +1,81 @@
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from a_accounts.helpers import get_admins
+from a_notifications.models import Notification
+from a_submissions.models import Submission
+from a_work.models import DefaultWork, Work
+from a_work.permissions import IsAdmin
+from a_work.serializers import CreateWorkSerializer
+
+
+class EditWorkView(APIView):
+    permission_classes = [IsAuthenticated, IsAdmin] 
+
+    def put(self, request, id, format=None):
+        try:
+            work= Work.objects.get(pk=id)
+        except Work.DoesNotExist:
+            return Response({'error':'work matching query does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+            
+        self.check_object_permissions(request, request.user)
+        previous_writer=work.writer
+        serializer = CreateWorkSerializer(work, data=request.data)
+        if serializer.is_valid():
+            work=serializer.save() 
+            new_writer=work.writer
+            if previous_writer!=new_writer:
+                if previous_writer is not None:
+                    # adding a notification
+                    notification=Notification.objects.create(
+                        type="Assigned Work",
+                        message="work has been has been reassigned",
+                        triggered_by=request.user,
+                        work=work
+                        )
+                    admins=get_admins().exclude(id=request.user.id)
+                    notification.users.add(*admins)
+                    notification.users.add(previous_writer)
+
+                # notification to new writer
+                new_notification=Notification.objects.create(
+                    type="Assigned Work",
+                    message="work has been has been assigned",
+                    triggered_by=request.user,
+                    work=work
+                    )
+                new_notification.users.add(new_writer)
+                
+                # SET WORK to unread
+                work.uptaken_is_read=False
+                work.assigned_is_read=False
+                work.save()
+
+                # ____________________________________________ handle users who bookmarked it
+                # Get users who bookmarked the work, excluding the current user
+                users=work.bookmarked_by.exclude(id=new_writer.id)
+                
+                notifTwo=Notification.objects.create(
+                    type="System Notification",
+                    message="The work you bookmarked has been taken by another user",
+                    triggered_by=request.user,
+                    work=work,
+                    )
+                notifTwo.users.add(*users)
+                # Clear bookmarks
+                work.bookmarked_by.clear()
+                
+            # updating default work records
+            if previous_writer!=new_writer:
+                submission=Submission.objects.filter(work=work, sender=previous_writer)
+                if submission.exists():
+                    DefaultWork.objects.create(
+                        user=request.user,
+                        work=work,
+                        type="QualityIssues"
+                        )
+                    
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
