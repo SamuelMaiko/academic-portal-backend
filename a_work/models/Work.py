@@ -53,11 +53,6 @@ class Work(BaseModel):
         blank=True
         )
     is_submitted = models.BooleanField(default=False)
-    revoked_by = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, 
-        through='RevokedWork', 
-        related_name='revoked_work'
-        )
     # normalization required (later)
     uptaken_is_read = models.BooleanField(default=False)
     assigned_is_read = models.BooleanField(default=False)
