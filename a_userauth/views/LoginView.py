@@ -1,3 +1,6 @@
+from a_userauth.models import CustomUser
+from a_userauth.serializers import UserSerializer
+from a_userauth.signals import send_otp_signal
 from django.conf import settings
 from django.contrib.auth import authenticate, login
 from django.shortcuts import get_object_or_404
@@ -9,10 +12,6 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-
-from a_userauth.models import CustomUser
-from a_userauth.serializers import UserSerializer
-from a_userauth.signals import send_otp_signal
 
 
 class LoginView(APIView):
@@ -41,7 +40,8 @@ class LoginView(APIView):
                             "email": "peterkenyatta631@gmail.com",
                             "details_filled": True,
                             "profile_completed": False,
-                            "password_changed": False
+                            "password_changed": False,
+                            "is_verified":False
                         },
                         "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcyMjQzMTcxMiwiaWF0IjoxNzIxODI2OTEyLCJqdGkiOiIyODM1ZGVmMWU1Nzg0MTNmYTBmYjdhOTc2NGUxOWFjZSIsInVzZXJfaWQiOjN9.6268BEgjgGrTTL0aUk3PKrudOnT6WE1HDyRXMB1jHcw",
                         "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIxODQ1ODEyLCJpYXQiOjE3MjE4MjY5MTIsImp0aSI6IjBhMDA1YzEzY2EzMTQyMzFhZTA0NjcxNGU0NDBjYzBiIiwidXNlcl9pZCI6M30.BdQfpLMqU2VZWYvr3DbJT35MCMf8DpAtLEVUSLgAxuk"
@@ -56,8 +56,8 @@ class LoginView(APIView):
                     }
                 }
             ),
-            401: openapi.Response(
-                description="Unauthorized",
+            404: openapi.Response(
+                description="Not Found",
                 examples={
                     "application/json": {
                         "error": "Invalid registration number or password"
@@ -88,7 +88,6 @@ class LoginView(APIView):
         if user is not None:
             login(request, user)
             # getting user token 
-            token, created_token=Token.objects.get_or_create(user=user)
             user_instance=get_object_or_404(CustomUser, registration_number=registration_number)
             serializer=UserSerializer(user_instance)
             
@@ -96,6 +95,7 @@ class LoginView(APIView):
             response["details_filled"]=user.onboarding.details_filled
             response["profile_completed"]=user.onboarding.profile_completed
             response["password_changed"]=user.onboarding.password_changed
+            response["is_verified"]=user.is_verified
             # jwt
             refresh = RefreshToken.for_user(user)
 
@@ -108,4 +108,4 @@ class LoginView(APIView):
             return Response(response_dict, status=status.HTTP_200_OK)
         # If user returns NONE = wrong credentials
         else:
-            return Response({"error": "Invalid registration number or password"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"error": "Invalid registration number or password"}, status=status.HTTP_404_NOT_FOUND)

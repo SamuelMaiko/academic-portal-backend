@@ -1,16 +1,16 @@
+from a_userauth.models import EmailOTP
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives, send_mail
 from django.dispatch import Signal, receiver
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
-from a_userauth.models import EmailOTP
-
 send_verification_otp=Signal()
 
 @receiver(send_verification_otp, sender=None)
 def send_verification_otp_handler(sender, **kwargs):
     user=kwargs["user"]
+    user_email=kwargs["email"]
     otp=EmailOTP.objects.filter(user=user).first().otp
 
     subject = "OTP for Email Verification"
@@ -28,7 +28,7 @@ def send_verification_otp_handler(sender, **kwargs):
     Techwave Writers Team
     """
     sender=settings.EMAIL_HOST_USER
-    recipient_list=[user.email]
+    recipient_list=[user_email]
     
    # Define HTML content
     html_content = render_to_string('a_userauth/verify_email.html', {

@@ -207,6 +207,12 @@ Before running the project, you need to set up your environment variables. Follo
 
 - **Status:** few endpoints have notifications e.g uptake work,revoke work ...
 
+### 3. Serving Media
+
+- **Description:** The application has not setup external file storage and handling.
+
+- **Status:** Planning on integrating Cloudinary for serving media.
+
 ## Support and Assistance
 
 If you have any questions about the codebase or encounter issues while working on it, feel free to reach out for assistance. Here are some ways to get support:

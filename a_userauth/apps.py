@@ -8,10 +8,10 @@ class AUserauthConfig(AppConfig):
     def ready(self):
         from .signals import (
             CreateUserProfile,
-            SendOTP,
-            SendWelcomeEmail,
-            GenerateRegistrationNumber,
             EmailAccountCredentials,
-            SendVerificationOTP
+            GenerateRegistrationNumber,
+            SendOTP,
+            SendVerificationOTP,
+            SendWelcomeEmail,
         )
     

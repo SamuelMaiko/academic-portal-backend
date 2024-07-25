@@ -14,14 +14,6 @@ def email_account_credentials_handler(sender, **kwargs):
     
     subject = f"Account Details for {registration_number}"
 
-    # message = f"Hello,\n\n" \
-    #           f"Your registration details:\n" \
-    #           f"Registration Number: {registration_number}\n" \
-    #           f"Password: {password}\n\n" \
-    #           f"Please keep this information secure.\n\n" \
-    #           f"Thank you,\n" \
-    #           f"TechWave Team"
-
     sender=settings.EMAIL_HOST_USER
     recipient_list=[receiver]
 
@@ -38,6 +30,7 @@ def email_account_credentials_handler(sender, **kwargs):
     email.attach_alternative(html_content, "text/html")
 
     email.send()
+    print("Sent ")
 
     
 
