@@ -1,16 +1,18 @@
 # serializers.py
-from rest_framework import serializers
 from a_profile.models import Profile
+from rest_framework import serializers
+
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     first_name=serializers.CharField(source='user.first_name')
     last_name=serializers.CharField(source='user.last_name')
     last_name=serializers.CharField(source='user.last_name')
+    email=serializers.CharField(source='user.email')
     
 
     class Meta:
         model=Profile
-        fields=['bio','first_name', 'last_name','phone_number', 'linkedin', 'country', 'county' ]
+        fields=['bio','first_name', 'last_name','phone_number', 'linkedin', 'country', 'county','email' ]
         
     def update(self, obj, validated_data):
         obj.bio=validated_data.get('bio', obj.bio)

@@ -38,6 +38,9 @@ class LoginView(APIView):
                         "user": {
                             "registration_number": "TW5303",
                             "email": "peterkenyatta631@gmail.com",
+                            "profile_picture_absolute": "http//:localhost:8000/media/profile_pics/Screenshot_2024-06-24_183856.png",        
+                            "first_name": "Peter",
+                            "last_name": "Josh",
                             "details_filled": True,
                             "profile_completed": False,
                             "password_changed": False,
@@ -89,13 +92,14 @@ class LoginView(APIView):
             login(request, user)
             # getting user token 
             user_instance=get_object_or_404(CustomUser, registration_number=registration_number)
-            serializer=UserSerializer(user_instance)
+            serializer=UserSerializer(user_instance, context={'request':request})
             
             response=serializer.data.copy()
             response["details_filled"]=user.onboarding.details_filled
             response["profile_completed"]=user.onboarding.profile_completed
             response["password_changed"]=user.onboarding.password_changed
             response["is_verified"]=user.is_verified
+            
             # jwt
             refresh = RefreshToken.for_user(user)
 

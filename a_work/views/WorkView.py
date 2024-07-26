@@ -1,5 +1,7 @@
 from datetime import timedelta
 
+from a_work.models import Work
+from a_work.serializers import WorkSerializer
 from django.db.models import Q
 from django.utils import timezone
 from drf_yasg import openapi
@@ -7,9 +9,6 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from a_work.models import Work
-from a_work.serializers import WorkSerializer
 
 
 class WorkView(APIView):

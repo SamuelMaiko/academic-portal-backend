@@ -27,10 +27,12 @@ class MyProfile(APIView):
                 schema=ProfileSerializer,
                 examples={
                     "application/json": {
+                            "profile_picture_absolute": "http//:localhost:8000/media/profile_pics/Screenshot_2024-06-24_183856.png",
                             "profile_picture": "/media/profile_pics/Screenshot_2024-06-24_183856.png",
                             "bio": "",
                             "first_name": "Sam",
                             "last_name": "Maiko",
+                            "role": "Admin",
                             "registration_number": "TW9801",
                             "country": "Kenya",
                             "county": "Nairobi"

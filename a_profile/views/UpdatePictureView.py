@@ -1,11 +1,10 @@
+from a_profile.serializers import UpdatePictureSerializer
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from a_profile.serializers import UpdatePictureSerializer
 
 
 class UpdatePictureView(APIView):
@@ -66,7 +65,7 @@ class UpdatePictureView(APIView):
          
     def put(self, request):
         profile=request.user.profile
-        serializer=UpdatePictureSerializer(profile,data=request.data)
+        serializer=UpdatePictureSerializer(profile,data=request.data, context={"request":request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
