@@ -1,3 +1,6 @@
+from a_accounts.helpers import get_admins
+from a_submissions.serializers import SubmitWorkSerializer
+from a_work.models import Work
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
@@ -5,16 +8,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from a_accounts.helpers import get_admins
-from a_submissions.serializers import SubmitWorkSerializer
-from a_work.models import Work
-
 
 class SubmitWorkView(APIView):
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
-        operation_description="Submit work by sending the work ID and submission details.",
+        operation_description="Submit work after completion.",
         manual_parameters=[
             openapi.Parameter(
                 name='Authorization',
@@ -97,6 +96,7 @@ class SubmitWorkView(APIView):
             
             if not work.is_submitted:
                 work.is_submitted=True
-                work.save()
+                work.status="Completed"
+                work.save(update_fields=["is_submitted","status"])
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

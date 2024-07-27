@@ -1,12 +1,11 @@
+from a_work.models import Work
+from a_work.permissions import IsWorkWriter
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from a_work.models import Work
-from a_work.permissions import IsWorkWriter
 
 
 class MarkAsReadView(APIView):
@@ -78,7 +77,8 @@ class MarkAsReadView(APIView):
             work.assigned_is_read=True
         if not work.uptaken_is_read:
             work.uptaken_is_read=True
-        work.save()
+        work.status="In Progress"
+        work.save(update_fields=["assigned_is_read","uptaken_is_read","status"])
         return Response({'message':'Work marked as read.'})
         
         
