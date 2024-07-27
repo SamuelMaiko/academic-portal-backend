@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from a_revisions.models import RevisionMessage
+from rest_framework import serializers
 
 
 class RevisionMessageSerializer(serializers.ModelSerializer):
@@ -17,10 +16,10 @@ class RevisionMessageSerializer(serializers.ModelSerializer):
     
     def get_sender(self, obj):
         return {
-            'id':obj.sender.id,
-            'registration_number':obj.sender.registration_number,
-            'first_name':obj.sender.first_name,
-            'last_name':obj.sender.last_name,
+            'id':obj.sender.id if obj.sender is not None else None ,
+            'registration_number':obj.sender.registration_number if obj.sender is not None else None,
+            'first_name':obj.sender.first_name if obj.sender is not None else None,
+            'last_name':obj.sender.last_name if obj.sender is not None else None,
         }
     
     def create(self, validated_data):

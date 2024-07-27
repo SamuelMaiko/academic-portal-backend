@@ -1,7 +1,6 @@
+from api.models import BaseModel
 from django.conf import settings
 from django.db import models
-
-from api.models import BaseModel
 
 from .Revision import Revision
 
@@ -18,5 +17,5 @@ class RevisionMessage(BaseModel):
         db_table = "revision_messages"  
 
     def __str__(self):
-        return f'Revision message from {self.sender.registration_number} for work {self.revision.work.work_code}'
+        return f'Revision message from {self.sender.registration_number if self.sender is not None else None} for work {self.revision.work.work_code}'
         
