@@ -1,11 +1,13 @@
-from api.models import BaseModel
-from django.db import models
-from django.conf import settings
 from datetime import timedelta
+
+from api.models import BaseModel
+from django.conf import settings
+from django.db import models
 from django.utils import timezone
-    
+
+
 class RegistrationCode(BaseModel):
-    code=models.CharField(max_length=6)
+    code=models.CharField(max_length=20)
     is_used=models.BooleanField(default=False)    
     duration_to_expire = models.DurationField(default=timedelta(hours=8))
     time_to_expire = models.TimeField(null=True, blank=True)

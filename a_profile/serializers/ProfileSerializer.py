@@ -14,7 +14,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         model=Profile
         fields=['profile_picture','bio','first_name', 'last_name','role','registration_number','country','county','profile_picture_absolute' ]
         
-    
     def get_profile_picture_absolute(self, obj):
         request = self.context.get('request')
         if obj.profile_picture and request:

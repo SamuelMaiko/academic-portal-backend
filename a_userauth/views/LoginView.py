@@ -84,6 +84,13 @@ class LoginView(APIView):
             
         if message !="Provide ":
             return Response({"error":message}, status=status.HTTP_400_BAD_REQUEST)
+            # activating if inactive
+        usr=CustomUser.objects.filter(registration_number=registration_number).first()
+        if usr and not usr.is_active:
+            usr.is_active=True
+            usr.save()
+
+
         
         
         user=authenticate(request, username=registration_number, password=password)
@@ -99,6 +106,7 @@ class LoginView(APIView):
             response["profile_completed"]=user.onboarding.profile_completed
             response["password_changed"]=user.onboarding.password_changed
             response["is_verified"]=user.is_verified
+            response["dark_mode"]=user.preferences.dark_mode
             
             # jwt
             refresh = RefreshToken.for_user(user)

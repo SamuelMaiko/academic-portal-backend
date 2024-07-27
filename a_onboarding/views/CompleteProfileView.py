@@ -1,3 +1,5 @@
+from a_onboarding.serializers import CompleteProfileSerializer
+from a_userauth.models import CustomUser
 from django.utils import timezone
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -5,9 +7,6 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from a_onboarding.serializers import CompleteProfileSerializer
-from a_userauth.models import CustomUser
 
 
 class CompleteProfileView(APIView):
@@ -37,6 +36,7 @@ class CompleteProfileView(APIView):
                 description="Profile updated successfully.",
                 examples={
                     "application/json": {
+                        "profile_picture_absolute": "https://example.com/profile.jpg",
                         "profile_picture": "https://example.com/profile.jpg",
                         "bio": "This is a bio.",
                     }
@@ -56,7 +56,7 @@ class CompleteProfileView(APIView):
     
     def put(self, request):
         profile=request.user.profile
-        serializer=CompleteProfileSerializer(profile, data=request.data)
+        serializer=CompleteProfileSerializer(profile, data=request.data, context={'request':request})
         
         if serializer.is_valid():
             serializer.save()
