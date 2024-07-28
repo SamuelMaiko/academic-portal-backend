@@ -6,7 +6,7 @@ from .Revision import Revision
 
 
 class RevisionMessage(BaseModel):
-    message = models.TextField()
+    message = models.TextField(null=True, blank=True)
     file=models.FileField(upload_to='revision_message_files', null=True, blank=True)
     image=models.ImageField(upload_to='revision_message_images', null=True, blank=True)
     is_read=models.BooleanField(default=False)

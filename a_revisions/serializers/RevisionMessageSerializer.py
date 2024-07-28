@@ -5,6 +5,9 @@ from rest_framework import serializers
 class RevisionMessageSerializer(serializers.ModelSerializer):
     is_mine=serializers.SerializerMethodField()
     sender=serializers.SerializerMethodField()
+    message=serializers.CharField(required=False)
+    image=serializers.ImageField(required=False)
+    file=serializers.FileField(required=False)
     
     class Meta:
         model = RevisionMessage
@@ -23,7 +26,7 @@ class RevisionMessageSerializer(serializers.ModelSerializer):
         }
     
     def create(self, validated_data):
-        print(f"Validated data: {validated_data}")
+        # print(f"Validated data: {validated_data}")
         data={
             'message':validated_data.get('message'),
             'file':validated_data.get('file', None),

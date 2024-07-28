@@ -1,12 +1,11 @@
+from a_revisions.models import Revision
+from a_revisions.serializers import RevisionDetailSerializer
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from a_revisions.models import Revision
-from a_revisions.serializers import RevisionDetailSerializer
 
 
 class RevisionDetailView(APIView):
@@ -112,10 +111,11 @@ class RevisionDetailView(APIView):
         # update the status
         if request.user.role=='Writer' and not revision.opened_by_writer :
             revision.opened_by_writer=True
-            revision.save()
+            revision.status="In Progress"
+            revision.save(update_fields=["opened_by_writer","status"])
 
         if request.user.role=='Admin' and not revision.opened_by_reviewer :
             revision.opened_by_reviewer=True
-            revision.save()
+            revision.save(update_fields=["opened_by_reviewer"])
 
         return Response(serializer.data, status=status.HTTP_200_OK)
