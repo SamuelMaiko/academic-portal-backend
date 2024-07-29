@@ -1,13 +1,12 @@
+from a_submissions.models import Submission
+from a_submissions.permissions import IsSubmissionSender
+from a_submissions.serializers import SubmitWorkSerializer
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from a_submissions.models import Submission
-from a_submissions.permissions import IsSubmissionSender
-from a_submissions.serializers import SubmitWorkSerializer
 
 
 class EditSubmissionsView(APIView):
@@ -33,7 +32,7 @@ class EditSubmissionsView(APIView):
         ],
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
-            required=['work','message',],
+            required=['work'],
             properties={
                 'work': openapi.Schema(type=openapi.TYPE_INTEGER, description="ID of the work being submitted."),
                 'message': openapi.Schema(type=openapi.TYPE_STRING, description="Message accompanying the submission."),

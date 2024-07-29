@@ -1,13 +1,12 @@
+from a_submissions.models import Submission
+from a_submissions.permissions import IsSubmissionSender
+from a_submissions.serializers import SubmissionSerializer
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from a_submissions.models import Submission
-from a_submissions.permissions import IsSubmissionSender
-from a_submissions.serializers import SubmissionSerializer
 
 
 class DeleteSubmissionsView(APIView):
@@ -71,4 +70,9 @@ class DeleteSubmissionsView(APIView):
 
         self.check_object_permissions(request, submission)
         submission.delete()
+        
+        # updating work to not submitted and changing progress
+        submission.work.is_submitted=False
+        submission.work.status="In Progress"
+        submission.work.save(update_fields=["is_submitted","status"])
         return Response(status=status.HTTP_204_NO_CONTENT)

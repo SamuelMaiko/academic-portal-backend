@@ -1,10 +1,9 @@
+from a_userauth.models import EmailOTP
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives, send_mail
 from django.dispatch import Signal, receiver
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-
-from a_userauth.models import EmailOTP
 
 send_otp_signal=Signal()
 
@@ -34,6 +33,4 @@ def send_otp_signal_handler(sender, **kwargs):
     
    # Attach the HTML content
     email.attach_alternative(html_content, "text/html")
-
     email.send()    
-    

@@ -1,3 +1,6 @@
+from a_userauth.HelperFunctions import generate_otp
+from a_userauth.models import CustomUser, EmailOTP
+from a_userauth.signals import send_otp_signal
 from django.utils import timezone
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -5,10 +8,6 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from a_userauth.HelperFunctions import generate_otp
-from a_userauth.models import CustomUser, EmailOTP
-from a_userauth.signals import send_otp_signal
 
 
 class ResetPasswordView(APIView):
@@ -61,7 +60,7 @@ class ResetPasswordView(APIView):
         if not email:
             return Response({'error':'Provide email.'})
         try:
-            user=CustomUser.objects.filter(email=email).first()
+            user=CustomUser.objects.get(email=email)
         except CustomUser.DoesNotExist:
             return Response({'message':"User with email does not exist."}, status=status.HTTP_404_NOT_FOUND)
 
