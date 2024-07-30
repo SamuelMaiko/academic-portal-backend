@@ -1,3 +1,6 @@
+from a_notifications.models import NotificationUser
+from a_revisions.models import Revision, RevisionMessage
+from a_submissions.models import Submission
 from django.db.models import Exists, OuterRef, Q, Subquery
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -5,10 +8,6 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from a_notifications.models import NotificationUser
-from a_revisions.models import Revision, RevisionMessage
-from a_submissions.models import Submission
 
 
 class UnreadNotificationsCountView(APIView):
@@ -56,12 +55,15 @@ class UnreadNotificationsCountView(APIView):
         uptaken_work=user.uptaken_work.filter(uptaken_is_read=False).count()
         notifications=NotificationUser.objects.filter(user=request.user, is_read=False).count()
         submissions=Submission.objects.filter(is_claimed=False).count()
-        is_read_subquery= RevisionMessage.objects.exclude(
+        is_read_subquery= Subquery(RevisionMessage.objects.exclude(
             sender=request.user).filter(
             revision_id=OuterRef("id")
             , is_read=False
-            )
-        revisions=Revision.objects.annotate(is_read=Exists(is_read_subquery)).filter(is_read=False).count()
+            ))
+        revisions=Revision.objects.filter(
+            Q(work__uptaken_by=request.user)|
+            Q(work__assigned_to=request.user)
+            ).annotate(not_read=Exists(is_read_subquery)).filter(not_read=True).count()
         
         data={
             "assigned_work":assigned_work,

@@ -1,7 +1,6 @@
+from api.models import BaseModel
 from django.conf import settings
 from django.db import models
-
-from api.models import BaseModel
 
 from .Notification import Notification
 
@@ -16,4 +15,4 @@ class NotificationUser(BaseModel):
         unique_together = ('notification', 'user')
 
     def __str__(self):
-        return f'{self.notification.message} - {self.user.username}'
+        return f'{self.notification.message} - {self.user.registration_number if self.user else None }'

@@ -1,8 +1,7 @@
-from django.conf import settings
-from django.db import models
-
 from a_work.models import Work
 from api.models import BaseModel
+from django.conf import settings
+from django.db import models
 
 
 class Notification(BaseModel):
@@ -14,6 +13,7 @@ class Notification(BaseModel):
         ('Revoked Work', 'Revoked Work'),
         ('Uptaken Work', 'Uptaken Work'),
         ('Assigned Work', 'Assigned Work'),
+        ('ReAssigned Work', 'ReAssigned Work'),
         ('New Revision', 'New Revision'),
         # ('Bookmark Taken', 'Bookmark Taken'),
     ]
@@ -46,4 +46,4 @@ class Notification(BaseModel):
         ordering = ('-created_at',)
 
     def __str__(self):
-        return f'Notification for {self.user.registration_number if self.user else None} - {self.get_type_display()}'
+        return f'{self.id} Notification {self.message} - {self.get_type_display()}'

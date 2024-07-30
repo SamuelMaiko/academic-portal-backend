@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from a_notifications.models import Notification
+from rest_framework import serializers
 
 
 class NotificationSerializer(serializers.ModelSerializer):
@@ -22,13 +21,15 @@ class NotificationSerializer(serializers.ModelSerializer):
             'id':obj.triggered_by.id,
             'registration_number':obj.triggered_by.registration_number,
             'first_name':obj.triggered_by.first_name,
-            'last_name':obj.triggered_by.last_name,
+            'last_name':obj.triggered_by.last_name
             } if obj.triggered_by is not None else None
 
     def get_work(self, obj):
         return {
             'id':obj.work.id,
             'work_code':obj.work.work_code,
+            'type':obj.work.type,
+            'deadline':obj.work.deadline,
             'writer':{
                 'id':obj.work.writer.id if obj.work.writer else None ,
                 'registration_number':obj.work.writer.registration_number if obj.work.writer else None,
@@ -36,3 +37,4 @@ class NotificationSerializer(serializers.ModelSerializer):
                 'last_name':obj.work.writer.last_name if obj.work.writer else None,
             }
             }
+        

@@ -1,11 +1,10 @@
-from django.contrib.auth.models import AbstractBaseUser, AbstractUser, PermissionsMixin
-from django.db import models
-from django.utils import timezone
-
 from a_bookmarks.models import Bookmark
 from a_userauth.managers import CustomUserManager
 from a_work.models import Work
 from api.models import BaseModel
+from django.contrib.auth.models import AbstractBaseUser, AbstractUser, PermissionsMixin
+from django.db import models
+from django.utils import timezone
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin, BaseModel):

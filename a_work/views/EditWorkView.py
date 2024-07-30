@@ -1,16 +1,15 @@
-from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
 from a_accounts.helpers import get_admins
 from a_notifications.models import Notification
 from a_submissions.models import Submission
 from a_work.models import DefaultWork, Work
 from a_work.permissions import IsAdmin
 from a_work.serializers import CreateWorkSerializer
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 
 class EditWorkView(APIView):
@@ -92,10 +91,11 @@ class EditWorkView(APIView):
             work=serializer.save() 
             new_writer=work.writer
             if previous_writer!=new_writer:
+                # Notifying the previous writer that their work has been assigned to another
                 if previous_writer is not None:
                     # adding a notification
                     notification=Notification.objects.create(
-                        type="Assigned Work",
+                        type="ReAssigned Work",
                         message="work has been has been reassigned",
                         triggered_by=request.user,
                         work=work
@@ -104,7 +104,7 @@ class EditWorkView(APIView):
                     notification.users.add(*admins)
                     notification.users.add(previous_writer)
 
-                # notification to new writer
+                # notifying the new writer of new work
                 new_notification=Notification.objects.create(
                     type="Assigned Work",
                     message="work has been has been assigned",
@@ -116,6 +116,7 @@ class EditWorkView(APIView):
                 # SET WORK to unread
                 work.uptaken_is_read=False
                 work.assigned_is_read=False
+                work.is_submitted=False
                 work.save()
 
                 # ____________________________________________ handle users who bookmarked it

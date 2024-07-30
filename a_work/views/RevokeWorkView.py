@@ -91,6 +91,7 @@ class RevokeWorkView(APIView):
                     type="RevokedUptaken"
                     )
             work.uptaken_is_read=False
+            work.is_submitted=False
         work.save()
         return Response({'message':'Work has been revoked successfully.'})
         
