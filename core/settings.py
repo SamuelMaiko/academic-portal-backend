@@ -10,7 +10,7 @@ env = environ.Env(
     EMAIL_USE_SSL=(bool, True),
     EMAIL_PORT=(int, 465),
     DEBUG=(bool, False),
-    DATABASE_PORT=(int,5432),
+    DATABASE_PORT=(int,3306),
     ALLOWED_HOSTS=(list,['localhost']),
 )
 
@@ -94,7 +94,7 @@ DATABASES = {
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
     'default': {
-             'ENGINE': 'django.db.backends.postgresql_psycopg2',
+             'ENGINE': env('DATABASE_ENGINE'),
              'NAME': env('DATABASE_NAME'),
              'USER': env('DATABASE_USER'),
              'PASSWORD': env('DATABASE_PASSWORD'),
