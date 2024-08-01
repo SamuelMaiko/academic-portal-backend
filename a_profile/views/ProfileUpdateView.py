@@ -84,7 +84,8 @@ class ProfileUpdateView(APIView):
             description="Profile details updated successfully.",
             examples={
                 "application/json": {
-                    "bio": "",
+                    "bio": "Hello",
+                    "bio_with_emojis": "Hello🥈",
                     "first_name": "Sam",
                     "last_name": "Maiko",
                     "phone_number": "",

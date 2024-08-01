@@ -1,6 +1,7 @@
 # serializers.py
-from a_profile.models import Profile
 from rest_framework import serializers
+
+from a_profile.models import Profile
 
 
 class ProfileSerializer(serializers.ModelSerializer):

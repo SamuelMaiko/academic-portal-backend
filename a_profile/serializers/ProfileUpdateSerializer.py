@@ -1,6 +1,7 @@
 # serializers.py
-from a_profile.models import Profile
 from rest_framework import serializers
+
+from a_profile.models import Profile
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
@@ -8,12 +9,13 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
     last_name=serializers.CharField(source='user.last_name')
     last_name=serializers.CharField(source='user.last_name')
     email=serializers.CharField(source='user.email')
-    bio=serializers.SerializerMethodField()
+    bio = serializers.CharField(required=False)
+    bio_with_emojis=serializers.SerializerMethodField()
     
 
     class Meta:
         model=Profile
-        fields=['bio','first_name', 'last_name','phone_number', 'linkedin', 'country', 'county','email' ]
+        fields=['bio','first_name', 'last_name','phone_number', 'linkedin', 'country', 'county','email','bio_with_emojis' ]
         
     def update(self, obj, validated_data):
         obj.bio=validated_data.get('bio', obj.bio)
@@ -33,7 +35,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         
         return obj
     
-    def get_bio(self, obj):
+    def get_bio_with_emojis(self, obj):
         return obj.bio_with_emojis
     
         
