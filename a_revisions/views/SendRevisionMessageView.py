@@ -48,7 +48,8 @@ class SendRevisionMessageView(APIView):
                 examples={
                     "application/json": {
                         "id": 35,
-                        "message": "Great",
+                        "message": "Great :glassy",
+                        "emoji_message": "Great😎",
                         "file": None,
                         "image": "http://localhost:8000/media/revision_message_images/wallpaperflare.com_wallpaper_1.jpg",
                         "is_read": False,

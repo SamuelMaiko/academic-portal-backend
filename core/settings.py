@@ -32,9 +32,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'tailwind',
+    'theme',
+    'django_browser_reload',
     'drf_yasg',
     'corsheaders',
-    # 'rest_framework.authtoken',
     'rest_framework',
     'django_extensions',
     'api',
@@ -52,6 +54,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
+     "django_browser_reload.middleware.BrowserReloadMiddleware",
     "django.middleware.common.CommonMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -85,26 +88,31 @@ TEMPLATES = [
     },
 ]
 
+TAILWIND_APP_NAME = 'theme'
+
+NODEJS_BIN_PATH = '/c/Install/node'
+NPM_BIN_PATH = 'C:/Program Files/nodejs/npm.cmd'
+
 WSGI_APPLICATION = 'core.wsgi.application'
 
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
     'default': {
-             'ENGINE': env('DATABASE_ENGINE'),
-             'NAME': env('DATABASE_NAME'),
-             'USER': env('DATABASE_USER'),
-             'PASSWORD': env('DATABASE_PASSWORD'),
-             'HOST': env('DATABASE_HOST'),
-             'PORT': env('DATABASE_PORT'),
-            #  'OPTIONS': {
-            #       'charset': 'utf8mb4',
-            #       'init_command': "SET sql_mode='STRICT_TRANS_TABLES', innodb_strict_mode=1",
-            #   },
-         }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+    # 'default': {
+    #          'ENGINE': env('DATABASE_ENGINE'),
+    #          'NAME': env('DATABASE_NAME'),
+    #          'USER': env('DATABASE_USER'),
+    #          'PASSWORD': env('DATABASE_PASSWORD'),
+    #          'HOST': env('DATABASE_HOST'),
+    #          'PORT': env('DATABASE_PORT'),
+    #         #  'OPTIONS': {
+    #         #       'charset': 'utf8mb4',
+    #         #       'init_command': "SET sql_mode='STRICT_TRANS_TABLES', innodb_strict_mode=1",
+    #         #   },
+    #      }
 }
 
 AUTH_PASSWORD_VALIDATORS = [

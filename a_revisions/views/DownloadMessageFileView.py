@@ -1,4 +1,3 @@
-from a_work.models import Work, WorkImage
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404, render
 from drf_yasg import openapi
@@ -6,12 +5,14 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from a_revisions.models import RevisionMessage
+
 
 # Create your views here.
-class DownloadWorkImageView(APIView):
+class DownloadMessageFileView(APIView):
     
     @swagger_auto_schema(
-        operation_description="Download a specific work image by its ID.",
+        operation_description="Download a specific work file by its ID.",
         manual_parameters=[
             openapi.Parameter(
                 name='Authorization',
@@ -42,13 +43,15 @@ class DownloadWorkImageView(APIView):
         tags=['Work']
     )
     
-    def get(self, request, image_id):
+    def get(self, request, message_id):
         try:
-            image = WorkImage.objects.get(id=image_id)
-        except WorkImage.DoesNotExist:
+            revision_message=RevisionMessage.objects.get(id=message_id)
+        except RevisionMessage.DoesNotExist:
             return Response({'detail': 'Not found.'}, status=404)
         
+        if not revision_message.file:
+            return Response({"error":"Message has no file"}, status=404)
 
-        file_path = image.image.path
-        response = FileResponse(open(file_path, 'rb'), as_attachment=True, filename=image.image.name)
+        file_path = revision_message.file.path
+        response = FileResponse(open(file_path, 'rb'), as_attachment=True, filename=revision_message.file.name)
         return response

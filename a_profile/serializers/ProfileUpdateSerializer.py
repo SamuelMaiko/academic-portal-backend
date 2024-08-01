@@ -8,6 +8,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
     last_name=serializers.CharField(source='user.last_name')
     last_name=serializers.CharField(source='user.last_name')
     email=serializers.CharField(source='user.email')
+    bio=serializers.SerializerMethodField()
     
 
     class Meta:
@@ -31,5 +32,8 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         
         
         return obj
+    
+    def get_bio(self, obj):
+        return obj.bio_with_emojis
     
         

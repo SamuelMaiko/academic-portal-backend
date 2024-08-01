@@ -1,3 +1,8 @@
+# from userauth.HelperFunctions import SendWelcomeEmail, SendAccountActivationEmail
+from a_userauth.HelperFunctions import create_otp_model
+from a_userauth.models import CustomUser, RegistrationCode
+from a_userauth.serializers import UserSerializer
+from a_userauth.signals import email_account_credentials, send_otp_signal
 from django.contrib.auth import authenticate, login
 from django.shortcuts import get_object_or_404
 from drf_yasg import openapi
@@ -6,12 +11,6 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-# from userauth.HelperFunctions import SendWelcomeEmail, SendAccountActivationEmail
-from a_userauth.HelperFunctions import create_otp_model
-from a_userauth.models import CustomUser, RegistrationCode
-from a_userauth.serializers import UserSerializer
-from a_userauth.signals import email_account_credentials, send_otp_signal
 
 
 class RegistrationView(APIView):
@@ -95,12 +94,16 @@ class RegistrationView(APIView):
         random_password=CustomUser.objects.make_random_password()
         new_user=CustomUser.objects.create()
         new_user.set_password(random_password)
+        # save the email as temporary to help in onboarding process
+        new_user.temporary_email=email
         new_user.save()
         
         # associate account with the code
         reg_code_instance.user=new_user
         reg_code_instance.is_used=True
         reg_code_instance.save()
+        
+        
         # send the credentials to the email (reg.no and password)
         email_account_credentials.send(
             sender=None,

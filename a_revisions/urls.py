@@ -12,5 +12,6 @@ urlpatterns = [
     path('<int:id>/mark-messages-as-read/',  views.ReadAllRevisionMessagesView.as_view(), name="mark-messages-as-read"), 
     path('delete-message/<int:id>/',  views.DeleteRevisionMessageView.as_view(), name="delete-revision-message"), 
     path('edit-message/<int:id>/',  views.EditRevisionMessageView.as_view(), name="edit-revision-message"), 
-
+    path('download-image/<int:message_id>/', views.DownloadMessageImageView.as_view(), name='download-message-image'),
+    path('download-file/<int:message_id>/', views.DownloadMessageFileView.as_view(), name='download-message-file'),
 ]

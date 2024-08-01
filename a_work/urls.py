@@ -24,5 +24,6 @@ urlpatterns = [
     path('<int:id>/revisions/',  rev_views.WorkRevisionsView.as_view(), name="work-revisions"),
     path('<int:id>/create-revision/',  rev_views.CreateRevisionView.as_view(), name="create-revision"),
     path('download/<int:image_id>/', views.DownloadWorkImageView.as_view(), name='download-work-image'),
+    path('download-file/<int:file_id>/', views.DownloadWorkFileView.as_view(), name='download-work-file'),
     path('download-images/<int:work_id>/', views.DownloadImagesZipView.as_view(), name='download-all-images-zip'),
 ]

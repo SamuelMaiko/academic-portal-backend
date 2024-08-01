@@ -14,7 +14,8 @@ class WorkDetailSerializer(serializers.ModelSerializer):
     is_mine=serializers.SerializerMethodField()
     writer=serializers.SerializerMethodField()
     images=serializers.SerializerMethodField()
-    files=WorkFileSerializer(many=True, read_only=True)
+    files=serializers.SerializerMethodField()
+    # files=WorkFileSerializer(many=True, read_only=True)
     images_zip_url = serializers.SerializerMethodField()
     
     
@@ -25,6 +26,10 @@ class WorkDetailSerializer(serializers.ModelSerializer):
     def get_images(self, obj):
         request=self.context['request']
         return WorkImageSerializer(obj.images, many=True, context={'request':request}).data
+
+    def get_files(self, obj):
+        request=self.context['request']
+        return WorkFileSerializer(obj.files, many=True, context={'request':request}).data
     
     def get_is_bookmarked(self, obj):
         user=self.context['request'].user

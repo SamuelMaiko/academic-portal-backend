@@ -3,6 +3,7 @@ from .AssignWorkView import AssignWorkView
 from .CreateWorkView import CreateWorkView
 from .DeleteWorkView import DeleteWorkView
 from .DownloadImagesZipView import DownloadImagesZipView
+from .DownloadWorkFileView import DownloadWorkFileView
 from .DownloadWorkImageView import DownloadWorkImageView
 from .EditWorkView import EditWorkView
 from .MarkAsReadView import MarkAsReadView

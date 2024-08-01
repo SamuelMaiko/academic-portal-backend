@@ -1,12 +1,13 @@
-from a_submissions.models import Submission
-from a_submissions.permissions import IsSubmissionSender
-from a_submissions.serializers import SubmitWorkSerializer
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from a_submissions.models import Submission
+from a_submissions.permissions import IsSubmissionSender
+from a_submissions.serializers import SubmitWorkSerializer
 
 
 class EditSubmissionsView(APIView):
@@ -97,7 +98,7 @@ class EditSubmissionsView(APIView):
 
         self.check_object_permissions(request, submission)
 
-        serializer=SubmitWorkSerializer(submission,data=request.data)
+        serializer=SubmitWorkSerializer(submission,data=request.data, context={'request':request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

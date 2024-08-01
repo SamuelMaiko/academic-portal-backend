@@ -2,6 +2,8 @@ from .AdminRevisionsView import AdminRevisionsView
 from .CreateRevisionView import CreateRevisionView
 from .DeleteRevisionMessageView import DeleteRevisionMessageView
 from .DeleteRevisionView import DeleteRevisionView
+from .DownloadMessageFileView import DownloadMessageFileView
+from .DownloadMessageImageView import DownloadMessageImageView
 from .EditRevisionMessageView import EditRevisionMessageView
 from .EditRevisionView import EditRevisionView
 from .ReadAllRevisionMessagesView import ReadAllRevisionMessagesView

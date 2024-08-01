@@ -1,5 +1,3 @@
-from a_work.models import Work
-from a_work.serializers import WorkDetailSerializer
 from django.db.models import Q
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -7,6 +5,9 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from a_work.models import Work
+from a_work.serializers import WorkDetailSerializer
 
 
 class WorkDetailView(APIView):
@@ -68,17 +69,20 @@ class WorkDetailView(APIView):
                                 {
                                     "id": 1,
                                     "file_name": "MyStudentSched.pdf",
-                                    "file": "http://localhost:8000/media/work_files/MyStudentSched.pdf"
+                                    "file": "http://localhost:8000/media/work_files/MyStudentSched.pdf",
+                                    "download_url": "http://localhost:8000/api/work/download/1/"
                                 },
                                 {
                                     "id": 2,
                                     "file_name": "images_1.zip",
-                                    "file": "http://localhost:8000/media/work_files/images_1.zip"
+                                    "file": "http://localhost:8000/media/work_files/images_1.zip",
+                                    "download_url": "http://localhost:8000/api/work/download/1/"
                                 },
                                 {
                                     "id": 3,
                                     "file_name": "pcnema-windows.exe",
-                                    "file": "http://localhost:8000/media/work_files/pcnema-windows.exe"
+                                    "file": "http://localhost:8000/media/work_files/pcnema-windows.exe",
+                                    "download_url": "http://localhost:8000/api/work/download/1/"
                                 }
                             ],
                             "writer": None,
