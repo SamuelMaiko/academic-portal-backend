@@ -115,7 +115,7 @@ class RegistrationView(APIView):
             )
 
         # giving the user notifications
-        for n in range(7,13):
+        for n in range(14,19):
             NotificationUser.objects.create(user=new_user, notification_id=n)
             
         # send a success 
