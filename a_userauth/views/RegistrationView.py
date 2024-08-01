@@ -1,8 +1,4 @@
 # from userauth.HelperFunctions import SendWelcomeEmail, SendAccountActivationEmail
-from a_userauth.HelperFunctions import create_otp_model
-from a_userauth.models import CustomUser, RegistrationCode
-from a_userauth.serializers import UserSerializer
-from a_userauth.signals import email_account_credentials, send_otp_signal
 from django.contrib.auth import authenticate, login
 from django.shortcuts import get_object_or_404
 from drf_yasg import openapi
@@ -11,6 +7,12 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from a_notifications.models import NotificationUser
+from a_userauth.HelperFunctions import create_otp_model
+from a_userauth.models import CustomUser, RegistrationCode
+from a_userauth.serializers import UserSerializer
+from a_userauth.signals import email_account_credentials, send_otp_signal
 
 
 class RegistrationView(APIView):
@@ -111,5 +113,10 @@ class RegistrationView(APIView):
             password=random_password,
             email=email
             )
+
+        # giving the user notifications
+        for n in range(7,13):
+            NotificationUser.objects.create(user=new_user, notification_id=n)
+            
         # send a success 
         return Response({'message':"Registration successful"})
