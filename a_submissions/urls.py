@@ -9,4 +9,5 @@ urlpatterns = [
     path('<int:id>/claim/',  views.ClaimSubmissionView.as_view(), name="claim-submission"),
     path('<int:id>/delete/',  views.DeleteSubmissionsView.as_view(), name="delete-submission"),
     path('<int:id>/edit/',  views.EditSubmissionsView.as_view(), name="edit-submission"),
+    path('download-file/<int:submission_id>/', views.DownloadSubmissionFileView.as_view(), name='download-submission-file'),
 ]

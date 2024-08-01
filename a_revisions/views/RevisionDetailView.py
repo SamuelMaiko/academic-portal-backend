@@ -46,9 +46,12 @@ class RevisionDetailView(APIView):
                     "messages": [
                         {
                             "id": 32,
-                            "message": "Correct now😂",
+                            "message": "Correct now :laughy",
+                            "emoji_message": "Correct now😂",
                             "file": None,
                             "image": None,
+                            "file_download_link": "http://localhost:8000/api/work/download/1/",
+                            "image_download_link": "http://localhost:8000/api/work/download/1/",
                             "is_read": True,
                             "sender": {
                                 "id": 1,
@@ -62,9 +65,12 @@ class RevisionDetailView(APIView):
                         },
                         {
                             "id": 33,
-                            "message": "Correct 😂",
+                            "message": "Correct :laughy",
+                            "emoji_message": "Correct now😂",
                             "file": None,
                             "image": None,
+                            "file_download_link": "http://localhost:8000/api/work/download/1/",
+                            "image_download_link": "http://localhost:8000/api/work/download/1/",
                             "is_read": True,
                             "sender": {
                                 "id": 3,

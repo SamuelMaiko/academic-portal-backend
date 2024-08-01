@@ -9,6 +9,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     last_name=serializers.CharField(source='user.last_name')
     role=serializers.CharField(source='user.role')
     profile_picture_absolute = serializers.SerializerMethodField()
+    bio=serializers.SerializerMethodField()
 
     class Meta:
         model=Profile
@@ -19,3 +20,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         if obj.profile_picture and request:
             return request.build_absolute_uri(obj.profile_picture.url)
         return None
+    
+    def get_bio(self, obj):
+        return obj.bio_with_emojis

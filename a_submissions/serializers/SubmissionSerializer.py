@@ -1,16 +1,18 @@
-from a_submissions.models import Submission
+from django.urls import reverse
 from rest_framework import serializers
+
+from a_submissions.models import Submission
 
 
 class SubmissionSerializer(serializers.ModelSerializer):
     work=serializers.SerializerMethodField()  
     sender=serializers.SerializerMethodField()
     claimed_by=serializers.SerializerMethodField()
-      
+    file_download_link=serializers.SerializerMethodField(required=False)      
 
     class Meta:
         model=Submission
-        fields=['id','message','file','sender','claimed_by', 'work','created_at']
+        fields=['id','message','file','sender','claimed_by', 'work','created_at','file_download_link']
 
     def get_work(self, obj):
         return {
@@ -40,3 +42,12 @@ class SubmissionSerializer(serializers.ModelSerializer):
         if obj.profile_picture and request:
             return request.build_absolute_uri(obj.profile_picture.url)
         return None
+    
+    def get_file_download_link(self, obj):
+        request = self.context.get('request')
+        if request:
+            return request.build_absolute_uri(reverse('download-submission-file', args=[obj.id])) if obj.file else None
+        return None
+
+    
+    

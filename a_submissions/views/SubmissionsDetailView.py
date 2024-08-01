@@ -39,6 +39,7 @@ class SubmissionsDetailView(APIView):
                                 "id": 6,
                                 "message": "Forgot,latest one.",
                                 "file": "/media/submission_files/MyStudentSched.pdf",
+                                "file_download_link": "http://localhost:8000/api/work/download/1/",
                                 "sender": {
                                     "id": 3,
                                     "registration_number": "TW5303",
@@ -80,5 +81,5 @@ class SubmissionsDetailView(APIView):
         except Submission.DoesNotExist:
             return Response({'error':'submission matching query does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer=SubmissionSerializer(submission)
+        serializer=SubmissionSerializer(submission, context={"request":request})
         return Response(serializer.data)

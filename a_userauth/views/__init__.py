@@ -9,4 +9,5 @@ from .ResetPasswordVerifyOTPView import ResetPasswordVerifyOTPView
 from .ResetPasswordView import ResetPasswordView
 from .SendVerificationOTPView import SendVerificationOTPView
 from .SubmitNewPasswordView import SubmitNewPasswordView
+from .TestRegCodesView import TestRegCodesView
 from .VerifyEmailView import VerifyEmailView

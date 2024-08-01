@@ -1,9 +1,10 @@
 from datetime import timedelta
 
-from api.models import BaseModel
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+
+from api.models import BaseModel
 
 
 class RegistrationCode(BaseModel):
@@ -27,8 +28,8 @@ class RegistrationCode(BaseModel):
 
     
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        self.time_to_expire=(timezone.localtime(self.created_at)+self.duration_to_expire).time()
+        if not self.pk: 
+            self.time_to_expire=(timezone.localtime(self.created_at)+self.duration_to_expire).time()
         return super().save(*args, **kwargs)
     
     @property

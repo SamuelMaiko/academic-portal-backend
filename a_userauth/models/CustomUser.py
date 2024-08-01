@@ -15,6 +15,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, BaseModel):
     
     registration_number = models.CharField(unique=True, max_length=100)
     email = models.EmailField(unique=True, null=True)
+    temporary_email = models.EmailField( null=True, blank=True)
     first_name=models.CharField(max_length=50)
     last_name=models.CharField(max_length=50)
     role = models.CharField(max_length=25, blank=True, choices=ROLE_CHOICES, default="Writer")

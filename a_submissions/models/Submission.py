@@ -1,7 +1,8 @@
-from a_work.models import Work
-from api.models import BaseModel
 from django.conf import settings
 from django.db import models
+
+from a_work.models import Work
+from api.models import BaseModel
 
 
 class Submission(BaseModel):
@@ -21,6 +22,13 @@ class Submission(BaseModel):
     class Meta:
         db_table = "submissions"  
         ordering = ("-created_at",)
+
+    def save(self, *args, **kwargs):
+        if self.claimed_by:
+            self.is_claimed=True
+        else:
+            self.is_claimed=False
+        return super().save( *args, **kwargs)
 
     def __str__(self):
         return f'Submission {self.pk} for work {self.work.work_code} by {self.sender.registration_number}'
