@@ -32,9 +32,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tailwind',
-    'theme',
-    'django_browser_reload',
     'drf_yasg',
     'corsheaders',
     'rest_framework',
@@ -54,7 +51,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
-     "django_browser_reload.middleware.BrowserReloadMiddleware",
     "django.middleware.common.CommonMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -87,11 +83,6 @@ TEMPLATES = [
         },
     },
 ]
-
-TAILWIND_APP_NAME = 'theme'
-
-NODEJS_BIN_PATH = '/c/Install/node'
-NPM_BIN_PATH = 'C:/Program Files/nodejs/npm.cmd'
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
@@ -153,7 +144,6 @@ AUTH_USER_MODEL='a_userauth.CustomUser'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        # 'rest_framework.authentication.TokenAuthentication',
     ],
 }
 

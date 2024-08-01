@@ -15,4 +15,5 @@ urlpatterns = [
     path('verify-email/', views.VerifyEmailView.as_view(), name="verify-email"),
     path('deactivate-account/', views.DeactivateAccountView.as_view(), name="deactivate-account"),
     path('delete-account/', views.DeleteAccountView.as_view(), name='delete-account'),
+    path('test-registration-codes/', views.TestRegCodesView.as_view(), name='delete-account'),
 ]
