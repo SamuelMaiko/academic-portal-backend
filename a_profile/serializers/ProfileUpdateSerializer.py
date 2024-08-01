@@ -15,7 +15,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model=Profile
-        fields=['bio','first_name', 'last_name','phone_number', 'linkedin', 'country', 'county','email','bio_with_emojis' ]
+        fields=['bio','bio_with_emojis','first_name', 'last_name','phone_number', 'linkedin', 'country', 'county','email' ]
         
     def update(self, obj, validated_data):
         obj.bio=validated_data.get('bio', obj.bio)
