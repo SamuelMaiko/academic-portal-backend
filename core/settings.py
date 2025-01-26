@@ -23,9 +23,11 @@ SECRET_KEY =env('SECRET_KEY')
 
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = env("ALLOWED_HOSTS")
+# ALLOWED_HOSTS = env("ALLOWED_HOSTS")
+ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
+    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -85,25 +87,26 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
+ASGI_APPLICATION = "core.asgi.application"
 
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
     'default': {
-             'ENGINE': env('DATABASE_ENGINE'),
-             'NAME': env('DATABASE_NAME'),
-             'USER': env('DATABASE_USER'),
-             'PASSWORD': env('DATABASE_PASSWORD'),
-             'HOST': env('DATABASE_HOST'),
-             'PORT': env('DATABASE_PORT'),
-            #  'OPTIONS': {
-            #       'charset': 'utf8mb4',
-            #       'init_command': "SET sql_mode='STRICT_TRANS_TABLES', innodb_strict_mode=1",
-            #   },
-         }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+    # 'default': {
+    #          'ENGINE': env('DATABASE_ENGINE'),
+    #          'NAME': env('DATABASE_NAME'),
+    #          'USER': env('DATABASE_USER'),
+    #          'PASSWORD': env('DATABASE_PASSWORD'),
+    #          'HOST': env('DATABASE_HOST'),
+    #          'PORT': env('DATABASE_PORT'),
+    #         #  'OPTIONS': {
+    #         #       'charset': 'utf8mb4',
+    #         #       'init_command': "SET sql_mode='STRICT_TRANS_TABLES', innodb_strict_mode=1",
+    #         #   },
+    #      }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -201,4 +204,13 @@ SIMPLE_JWT = {
     "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
+}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
 }
