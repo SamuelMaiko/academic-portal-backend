@@ -69,10 +69,14 @@ class AccountsView(APIView):
     )
     
     def get(self, request):
+        role=request.GET.get('role', None)
+
         user=request.user
-        self.check_object_permissions(request, user)
-        
-        users=CustomUser.objects.exclude(id=user.id).order_by('-created_at')
+        # self.check_object_permissions(request, user)
+        if role is not None:
+            users=CustomUser.objects.filter(role=role).exclude(id=user.id).order_by('-created_at')
+        else:
+            users=CustomUser.objects.exclude(id=user.id).order_by('-created_at')
         serializer=AccountSerializer(users, many=True)
         return Response(serializer.data)
         

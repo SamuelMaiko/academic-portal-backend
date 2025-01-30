@@ -8,10 +8,6 @@ from api.models import BaseModel
 
 
 class Work(BaseModel):
-    WORK_CHOICES=[
-        ('Essay', 'Essay'),
-        ('Reflection Paper', 'Reflection_Paper'),
-    ]
     STATUS_CHOICES=[
         ('Completed', 'Completed'),
         ('In Progress', 'In progress'),
@@ -19,7 +15,7 @@ class Work(BaseModel):
     ]
     
     work_code = models.CharField(max_length=100, null=True, blank=True)
-    type = models.CharField(max_length=100,choices=WORK_CHOICES, default="Essay", blank=True)
+    type = models.ForeignKey("type", on_delete=models.SET_NULL, related_name="work", null=True, blank=True, default=None)
     words = models.IntegerField()
     comment = models.TextField(null=True, blank=True)
     deadline = models.DateTimeField()

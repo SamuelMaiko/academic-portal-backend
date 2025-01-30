@@ -7,6 +7,7 @@ from . import views
 
 urlpatterns = [
     path('',  views.WorkView.as_view(), name="work"),
+    path('testing/',  views.TestingView.as_view(), name="testing"),
     path('<int:id>/',  views.WorkDetailView.as_view(), name="work-detail"),
     path('create/',  views.CreateWorkView.as_view(), name="create-work"),
     path('<int:id>/edit/',  views.EditWorkView.as_view(), name="edit-work"),
@@ -26,4 +27,6 @@ urlpatterns = [
     path('download/<int:image_id>/', views.DownloadWorkImageView.as_view(), name='download-work-image'),
     path('download-file/<int:file_id>/', views.DownloadWorkFileView.as_view(), name='download-work-file'),
     path('download-images/<int:work_id>/', views.DownloadImagesZipView.as_view(), name='download-all-images-zip'),
+    path("<int:work_id>/upload-files/", views.WorkFileUploadView.as_view(), name="work-file-upload"),
+    path("<int:work_id>/upload-images/", views.WorkImageUploadView.as_view(), name="work-image-upload"),
 ]

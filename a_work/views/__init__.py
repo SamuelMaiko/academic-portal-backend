@@ -18,3 +18,6 @@ from .UserRevokedWorkView import UserRevokedWorkView
 from .UserUptakenWorkView import UserUptakenWorkView
 from .WorkDetailView import WorkDetailView
 from .WorkView import WorkView
+from .TestingView import TestingView
+from .WorkFileUploadView import WorkFileUploadView
+from .WorkImageUploadView import WorkImageUploadView

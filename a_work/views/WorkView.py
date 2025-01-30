@@ -92,10 +92,12 @@ class WorkView(APIView):
         search_param=request.GET.get("search","")
         words=request.GET.get("words",None)
         deadline=request.GET.get("deadline",None)
-
-        print(search_param)
-        # removing the assigned and uptaken work
-        work=Work.objects.filter(Q(uptaken_by=None) & Q(assigned_to=None)).all()
+        requesting_user=request.GET.get("requesting_user","writer")
+        
+        if requesting_user=="admin":
+            work=Work.objects.all()
+        else:
+            work=Work.objects.filter(Q(uptaken_by=None) & Q(assigned_to=None)).all()
         # filtering the work based on search params
         work=work.filter(work_code__icontains=search_param)
         # filtering the work by words

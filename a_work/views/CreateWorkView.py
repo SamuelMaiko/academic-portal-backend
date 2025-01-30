@@ -63,6 +63,7 @@ class CreateWorkView(APIView):
         serializer = CreateWorkSerializer(data=request.data)
         if serializer.is_valid():
             work=serializer.save(author=request.user)
+            print(request.data)
             assigned_to=serializer.validated_data.get("assigned_to", None)
             if assigned_to is not None:
                 # adding a notification
