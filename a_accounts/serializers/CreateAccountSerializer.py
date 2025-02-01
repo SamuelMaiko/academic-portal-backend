@@ -7,12 +7,12 @@ class CreateAccountSerializer(serializers.ModelSerializer):
     
     class Meta: 
         model = CustomUser
-        fields = ['id','registration_number','password','first_name','last_name','email','is_active',]
+        fields = ['id','registration_number','password','first_name','last_name','email','role','is_active',]
         extra_kwargs = {
             'password': {'write_only': True}, 
             'email': {'required': True},
-            'first_name': {'required': False},
-            'last_name': {'required': False},
+            'first_name': {'required': True},
+            'last_name': {'required': True},
             'registration_number': {'required': False},
         }        
         
@@ -21,6 +21,7 @@ class CreateAccountSerializer(serializers.ModelSerializer):
             registration_number="wgf",
             email=validated_data.get('email'),
             first_name=validated_data.get('first_name', ''),
+            role=validated_data.get('role', 'Writer'),
             last_name=validated_data.get('last_name', ''),
             )
         new_user.set_password(validated_data.get('password'))

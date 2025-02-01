@@ -22,4 +22,5 @@ from .TestingView import TestingView
 from .WorkFileUploadView import WorkFileUploadView
 from .WorkImageUploadView import WorkImageUploadView
 from .DeleteWorkImageView import DeleteWorkImageView
+from .DeleteWorkFileView import DeleteWorkFileView
 from .TypeView import TypeView
