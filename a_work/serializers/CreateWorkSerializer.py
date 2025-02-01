@@ -13,7 +13,7 @@ class CreateWorkSerializer(serializers.ModelSerializer):
         fields = ['id', 'deadline', 'work_code','words', 'type', 'assigned_to', 'comment','status']
         
     def update(self, instance, validated_data):
-        print(validated_data)
+        # print(validated_data)
         instance.deadline=validated_data.get('deadline', instance.deadline)
         instance.assigned_to=validated_data.get('assigned_to', instance.assigned_to)
         instance.words=validated_data.get('words', instance.words)

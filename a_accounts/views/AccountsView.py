@@ -77,6 +77,6 @@ class AccountsView(APIView):
             users=CustomUser.objects.filter(role=role).exclude(id=user.id).order_by('-created_at')
         else:
             users=CustomUser.objects.exclude(id=user.id).order_by('-created_at')
-        serializer=AccountSerializer(users, many=True)
+        serializer=AccountSerializer(users, many=True, context={"request":request})
         return Response(serializer.data)
         

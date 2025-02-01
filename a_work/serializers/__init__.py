@@ -6,3 +6,4 @@ from .WorkFileSerializer import WorkFileSerializer
 from .WorkImageSerializer import WorkImageSerializer
 from .WorkSerializer import WorkSerializer
 from .WriterSerializer import WriterSerializer
+from .TypeSerializer import TypeSerializer

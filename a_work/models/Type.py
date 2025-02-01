@@ -9,7 +9,6 @@ class Type(BaseModel):
     
     class Meta:
         db_table = "type"  
-        ordering = ("-created_at",)
 
     def __str__(self):
         return f'Type {self.name}'

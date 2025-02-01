@@ -30,4 +30,5 @@ urlpatterns = [
     path("<int:work_id>/upload-files/", views.WorkFileUploadView.as_view(), name="work-file-upload"),
     path("<int:work_id>/upload-images/", views.WorkImageUploadView.as_view(), name="work-image-upload"),
     path("work-images/<int:image_id>/delete/", views.DeleteWorkImageView.as_view(), name="delete-work-image"),
+    path("types/", views.TypeView.as_view(), name="work-type-list"),
 ]
