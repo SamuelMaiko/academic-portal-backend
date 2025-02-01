@@ -17,11 +17,12 @@ class WorkDetailSerializer(serializers.ModelSerializer):
     files=serializers.SerializerMethodField()
     # files=WorkFileSerializer(many=True, read_only=True)
     images_zip_url = serializers.SerializerMethodField()
+    type = serializers.SerializerMethodField()
     
     
     class Meta:
         model=Work
-        fields=['id','work_code','type','deadline','words','status','comment', 'created_at', 'is_bookmarked', 'has_writer','is_mine','images', 'files', 'writer','images_zip_url']
+        fields=['id','work_code','type','deadline','words','status','comment', 'created_at', 'is_bookmarked', 'has_writer','is_mine','images', 'files', 'writer','images_zip_url','is_submitted']
 
     def get_images(self, obj):
         request=self.context['request']
@@ -44,6 +45,12 @@ class WorkDetailSerializer(serializers.ModelSerializer):
     def get_is_mine(self, obj):
         user=self.context['request'].user
         return obj.writer==user
+    
+    def get_type(self, obj):
+        return {
+            "id":obj.type.id if obj.type else None,
+            "name":obj.type.name if obj.type else None
+        }
     
     def get_images_zip_url(self, obj):
         request = self.context['request']

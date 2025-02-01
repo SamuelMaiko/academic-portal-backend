@@ -108,10 +108,11 @@ class EditWorkView(APIView):
                 new_notification=Notification.objects.create(
                     type="Assigned Work",
                     message="work has been has been assigned",
-                    triggered_by=request.user,
+                    triggered_by=request.user ,
                     work=work
                     )
-                new_notification.users.add(new_writer)
+                if new_writer is not None:
+                    new_notification.users.add(new_writer)
                 
                 # SET WORK to unread
                 work.uptaken_is_read=False
@@ -121,8 +122,10 @@ class EditWorkView(APIView):
 
                 # ____________________________________________ handle users who bookmarked it
                 # Get users who bookmarked the work, excluding the current user
-                users=work.bookmarked_by.exclude(id=new_writer.id)
-                
+                if new_writer is not None:
+                    users=work.bookmarked_by.exclude(id=new_writer.id)
+                else:
+                    users=work.bookmarked_by.all()
                 notifTwo=Notification.objects.create(
                     type="System Notification",
                     message="The work you bookmarked has been taken by another user",
