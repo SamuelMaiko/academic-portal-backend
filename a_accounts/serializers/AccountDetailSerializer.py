@@ -27,6 +27,7 @@ class AccountDetailSerializer(serializers.ModelSerializer):
             'date_joined',
             'last_login',
             'bio',
+            'is_verified'
             ]
         extra_kwargs={
             'registration_number':{'required':False}
@@ -37,6 +38,7 @@ class AccountDetailSerializer(serializers.ModelSerializer):
         instance.last_name=validated_data.get('last_name', instance.last_name)
         instance.email=validated_data.get('email', instance.email)
         instance.role=validated_data.get('role', instance.role)
+        instance.is_verified=validated_data.get('is_verified', instance.role)
         instance.save()
         
         if 'profile' in validated_data:

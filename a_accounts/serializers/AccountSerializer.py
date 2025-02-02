@@ -8,7 +8,7 @@ class AccountSerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = CustomUser
-        fields = ['id','registration_number','first_name','last_name','email','is_active','profile_picture_absolute']
+        fields = ['id','registration_number','first_name','last_name','email','is_active','profile_picture_absolute','role']
 
     def get_profile_picture_absolute(self, obj):
         request = self.context.get('request')

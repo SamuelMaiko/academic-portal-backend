@@ -79,6 +79,7 @@ class ResetPasswordView(APIView):
 
         new_password=CustomUser.objects.make_random_password()
         account.set_password(new_password)
+        print(new_password)
         account.save()
         
         # send email with new password

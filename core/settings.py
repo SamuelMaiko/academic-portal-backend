@@ -165,7 +165,7 @@ EMAIL_USE_SSL = env('EMAIL_USE_SSL')
 # JWT configs
 from datetime import timedelta
 
-...
+# ...
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=4,minutes=15),
