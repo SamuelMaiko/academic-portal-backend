@@ -8,10 +8,11 @@ from .RevisionMessageSerializer import RevisionMessageSerializer
 class RevisionDetailSerializer(serializers.ModelSerializer):
     messages=serializers.SerializerMethodField()
     reviewer=serializers.SerializerMethodField()
+    work=serializers.SerializerMethodField()
     
     class Meta:
         model = Revision
-        fields = ['id', 'submit_before', 'status','reviewer','messages' ]
+        fields = ['id', 'submit_before', 'status','reviewer','messages', 'work' ]
 
     def get_messages(self, obj):
         request=self.context['request']
@@ -23,4 +24,9 @@ class RevisionDetailSerializer(serializers.ModelSerializer):
             'registration_number':obj.reviewer.registration_number,
             'first_name':obj.reviewer.first_name,
             'last_name':obj.reviewer.last_name,
+        }
+    def get_work(self, obj):
+        return {
+            'id':obj.work.id if obj.work else None,
+            'work_code':obj.work.work_code if obj.work else None,
         }

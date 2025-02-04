@@ -101,7 +101,7 @@ class CreateRevisionView(APIView):
         data["work"]=work.id
         serializer = CreateRevisionSerializer(data=data)
         if serializer.is_valid():
-            revision = serializer.save()
+            revision = serializer.save(reviewer=request.user)
 
             # Creating notifications
             notification=Notification.objects.create(
@@ -110,7 +110,9 @@ class CreateRevisionView(APIView):
                 triggered_by=revision.reviewer,
                 work=revision.work
             )
-            notification.users.add(revision.work.writer)
+            
+            if revision.work.writer:
+                notification.users.add(revision.work.writer)
 
             # Notify admins
             admins = get_admins()
