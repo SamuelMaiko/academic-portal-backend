@@ -7,10 +7,11 @@ class RevisionSerializer(serializers.ModelSerializer):
     work=serializers.SerializerMethodField()
     reviewer=serializers.SerializerMethodField()
     is_read=serializers.SerializerMethodField()
+    writer=serializers.SerializerMethodField()
 
     class Meta:
         model = Revision
-        fields = ['id', 'submit_before','work', 'status','reviewer','is_read','created_at' ]
+        fields = ['id', 'submit_before','work', 'status','reviewer','is_read','created_at','writer']
 
     def get_work(self, obj):
         return {
@@ -29,3 +30,9 @@ class RevisionSerializer(serializers.ModelSerializer):
     def get_is_read(self, obj):
         request=self.context["request"]
         return not obj.messages.exclude(sender=request.user).filter(is_read=False).exists()
+    def get_writer(self, obj):
+        return {
+                "id":obj.work.writer.id if obj.work.writer else None,
+                "first_name":obj.work.writer.first_name if obj.work.writer else None,
+                "last_name":obj.work.writer.last_name if obj.work.writer else None
+                }
