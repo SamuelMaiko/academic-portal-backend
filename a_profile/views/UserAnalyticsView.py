@@ -99,4 +99,5 @@ class UserAnalyticsView(APIView):
             "revoked_work":revoked_work,
             "quality_issues":quality_issues
         }
+
         return Response(data)

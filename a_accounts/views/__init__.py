@@ -6,3 +6,5 @@ from .DeactivateAccountView import DeactivateAccountView
 from .DeleteAccountView import DeleteAccountView
 from .EditAccountView import EditAccountView
 from .ResetPasswordView import ResetPasswordView
+from .GeneralAccountAnalyticsView import GeneralAccountAnalyticsView
+from .UsersAnalyticsView import UsersAnalyticsView
