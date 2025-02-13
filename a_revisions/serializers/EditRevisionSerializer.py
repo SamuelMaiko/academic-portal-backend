@@ -8,9 +8,10 @@ class EditRevisionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Revision
-        fields = ['id', 'submit_before']
+        fields = ['id', 'submit_before','status']
 
     def update(self, instance, validated_data):
         instance.submit_before = validated_data.get('submit_before', instance.submit_before)
+        instance.status = validated_data.get('status', instance.status)
         instance.save()
         return instance

@@ -8,6 +8,8 @@ from rest_framework.views import APIView
 from a_work.models import Work
 from a_work.permissions import IsAdmin
 from a_work.serializers import CreateWorkSerializer
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 
 class DeleteWorkView(APIView):
@@ -50,4 +52,16 @@ class DeleteWorkView(APIView):
             
         self.check_object_permissions(request, request.user)
         work.delete()
+
+
+        # sending to socket
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            "work",
+            {
+                "type": "work.delete",
+                "data": id
+            }
+        )
+    
         return Response(status=status.HTTP_204_NO_CONTENT)

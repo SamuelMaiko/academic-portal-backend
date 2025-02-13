@@ -10,8 +10,11 @@ from a_accounts.helpers import get_admins
 from a_notifications.models import Notification
 from a_revisions.models import Revision
 from a_revisions.serializers import EditRevisionSerializer
+from a_revisions.serializers import RevisionSerializer
 from a_work.models import Work
 from a_work.permissions import IsAdmin
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 
 class EditRevisionView(APIView):
@@ -100,7 +103,25 @@ class EditRevisionView(APIView):
         # still using the same serializer for editing
         serializer=EditRevisionSerializer(revision, data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            updated_revision=serializer.save()
+
+
+            revision_data=RevisionSerializer(updated_revision, context={"request":request}).data
+            writer_group_name=f"{revision.work.writer.first_name}_{revision.work.writer.last_name}".lower()
+            # sending to socket
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                writer_group_name,
+                {
+                    "type": "revision.update",
+                    "data": revision_data
+                }
+            )
+
+
             return Response(serializer.data)
+        
+
+            
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         

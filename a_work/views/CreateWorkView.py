@@ -10,6 +10,9 @@ from a_notifications.models import Notification
 from a_work.models import Work
 from a_work.permissions import IsAdmin
 from a_work.serializers import CreateWorkSerializer
+from a_work.serializers import WorkSerializer
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 
 class CreateWorkView(APIView):
@@ -63,8 +66,22 @@ class CreateWorkView(APIView):
         serializer = CreateWorkSerializer(data=request.data)
         if serializer.is_valid():
             work=serializer.save(author=request.user)
-            print(request.data)
+            # print(request.data)
             assigned_to=serializer.validated_data.get("assigned_to", None)
+
+            work_data = WorkSerializer(work, context={"request":request}).data
+            # sending to socket
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                "work",
+                {
+                    "type": "work.add",
+                    "data": work_data,
+                }
+            )
+
+
+
             if assigned_to is not None:
                 # adding a notification
                 notification=Notification.objects.create(

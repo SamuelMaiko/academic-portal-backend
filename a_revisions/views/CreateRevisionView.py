@@ -10,8 +10,11 @@ from a_accounts.helpers import get_admins
 from a_notifications.models import Notification
 from a_revisions.models import Revision
 from a_revisions.serializers import CreateRevisionSerializer
+from a_revisions.serializers import RevisionSerializer
 from a_work.models import Work
 from a_work.permissions import IsAdmin
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 
 class CreateRevisionView(APIView):
@@ -102,6 +105,20 @@ class CreateRevisionView(APIView):
         serializer = CreateRevisionSerializer(data=data)
         if serializer.is_valid():
             revision = serializer.save(reviewer=request.user)
+
+            revision_data=RevisionSerializer(revision, context={"request":request}).data
+            writer_group_name=f"{work.writer.first_name}_{work.writer.last_name}".lower()
+
+             # sending to socket
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                writer_group_name,
+                {
+                    "type": "revision.add",
+                    "data": revision_data
+                }
+            )
+            
 
             # Creating notifications
             notification=Notification.objects.create(

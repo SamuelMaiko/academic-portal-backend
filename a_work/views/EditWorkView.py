@@ -4,12 +4,15 @@ from a_submissions.models import Submission
 from a_work.models import DefaultWork, Work
 from a_work.permissions import IsAdmin
 from a_work.serializers import CreateWorkSerializer
+from a_work.serializers import WorkSerializer
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 
 class EditWorkView(APIView):
@@ -90,6 +93,20 @@ class EditWorkView(APIView):
         if serializer.is_valid():
             work=serializer.save() 
             new_writer=work.writer
+
+            work_data=WorkSerializer(work, context={"request":request}).data
+            # sending to socket
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                "work",
+                {
+                    "type": "work.update",
+                    "data": work_data
+                }
+            )
+
+
+
             if previous_writer!=new_writer:
                 # Notifying the previous writer that their work has been assigned to another
                 if previous_writer is not None:

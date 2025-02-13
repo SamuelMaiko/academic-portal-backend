@@ -9,11 +9,15 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 
 django_asgi_app = get_asgi_application()
 
-from a_work.routing import websocket_urlpatterns
+from a_work.routing import websocket_urlpatterns as work_websockets
+from a_revisions.routing import websocket_urlpatterns as revisions_websockets
+
+# Combine the WebSocket URL patterns
+combined_websocket_urlpatterns = work_websockets + revisions_websockets
 
 application = ProtocolTypeRouter({
     "http": django_asgi_app,
     "websocket": AllowedHostsOriginValidator(
-            AuthMiddlewareStack(URLRouter(websocket_urlpatterns))
+            AuthMiddlewareStack(URLRouter(combined_websocket_urlpatterns))
         ),
 })
