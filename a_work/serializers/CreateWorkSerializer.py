@@ -10,7 +10,7 @@ class CreateWorkSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Work
-        fields = ['id', 'deadline', 'work_code','words', 'type', 'assigned_to', 'comment','status']
+        fields = ['id', 'deadline', 'work_code','words', 'type', 'assigned_to', 'comment','status','is_submitted']
         
     def update(self, instance, validated_data):
         # print(validated_data)
@@ -20,6 +20,7 @@ class CreateWorkSerializer(serializers.ModelSerializer):
         instance.type=validated_data.get('type', instance.type)
         instance.comment=validated_data.get('comment', instance.comment)
         instance.status=validated_data.get('status', instance.status)
+        instance.is_submitted=validated_data.get('is_submitted', instance.is_submitted)
         instance.uptaken_by=None
         instance.save()
         return instance

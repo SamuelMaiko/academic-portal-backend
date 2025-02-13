@@ -20,7 +20,7 @@ class Revision(BaseModel):
 
     class Meta:
         db_table = "revisions"
-        ordering=['-created_at']  
+        ordering=['-submit_before']  
 
     def __str__(self):
         return f'Revision for {self.work.work_code} by {self.reviewer.registration_number}'

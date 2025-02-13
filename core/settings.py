@@ -66,7 +66,10 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:5174",
-    "https://techwave-writers.netlify.app"
+    "https://techwave-writers.netlify.app",
+    "http://10.6.1.123:5174",
+    "http://192.168.100.140:5174",
+    "http://192.168.137.1:5174",
 ]
 
 ROOT_URLCONF = 'core.urls'

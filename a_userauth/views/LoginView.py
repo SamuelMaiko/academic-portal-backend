@@ -74,6 +74,11 @@ class LoginView(APIView):
     def post(self, request):
         registration_number=request.data.get('registration_number')
         password=request.data.get('password')
+        # either an admin or writer
+        user_requesting=request.GET.get("using")
+        if not user_requesting:
+            return Response({'error':"Requesting user needed"}, status=status.HTTP_400_BAD_REQUEST)
+        
         
         message='Provide '
         if not registration_number:
@@ -89,6 +94,10 @@ class LoginView(APIView):
         if usr and not usr.is_active:
             usr.is_active=True
             usr.save()
+
+        
+        if usr.role!=user_requesting:
+            return Response({"error": "Invalid credentials."}, status=status.HTTP_404_NOT_FOUND)
 
 
         
@@ -120,5 +129,5 @@ class LoginView(APIView):
                 
             return Response(response_dict, status=status.HTTP_200_OK)
         # If user returns NONE = wrong credentials
-        else:
-            return Response({"error": "Invalid registration number or password"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "Invalid credentials."}, status=status.HTTP_404_NOT_FOUND)
+            # return Response({"error": "Invalid registration number or password"}, status=status.HTTP_404_NOT_FOUND)

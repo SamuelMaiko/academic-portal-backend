@@ -12,10 +12,11 @@ class ProfileSerializer(serializers.ModelSerializer):
     profile_picture_absolute = serializers.SerializerMethodField()
     bio=serializers.SerializerMethodField()
     bio_with_emojis=serializers.SerializerMethodField()
+    email=serializers.SerializerMethodField()
 
     class Meta:
         model=Profile
-        fields=['profile_picture','bio','bio_with_emojis','first_name', 'last_name','role','registration_number','country','county','profile_picture_absolute' ]
+        fields=['profile_picture','bio','bio_with_emojis','first_name', 'last_name','role','registration_number','phone_number','email','country','county','profile_picture_absolute' ]
         
     def get_profile_picture_absolute(self, obj):
         request = self.context.get('request')
@@ -28,5 +29,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     
     def get_bio_with_emojis(self, obj):
         return obj.bio_with_emojis
+    def get_email(self, obj):
+        return obj.user.email
     
         
