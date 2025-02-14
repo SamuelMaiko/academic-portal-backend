@@ -12,6 +12,8 @@ from a_revisions.models import Revision
 from a_revisions.serializers import CreateRevisionSerializer
 from a_work.models import Work
 from a_work.permissions import IsAdmin
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 
 class DeleteRevisionView(APIView):
@@ -73,6 +75,17 @@ class DeleteRevisionView(APIView):
             revision= Revision.objects.get(pk=id)
         except Revision.DoesNotExist:
             return Response({'error':'revision matching query does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        writer_group_name=f"{revision.work.writer.first_name}_{revision.work.writer.last_name}".lower()
+        # sending to socket
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            writer_group_name,
+            {
+                "type": "revision.delete",
+                "data": revision.id,
+            }
+        )
 
         revision.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

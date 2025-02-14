@@ -20,3 +20,6 @@ class WriterRevisionConsumer(AsyncWebsocketConsumer):
     async def revision_update(self, event):
         revision=event["data"]
         await self.send(text_data=json.dumps({"action":"update", "revision":revision}))
+    async def revision_delete(self, event):
+        revision_id=event["data"]
+        await self.send(text_data=json.dumps({"action":"delete", "revision_id":revision_id}))
