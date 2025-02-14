@@ -79,6 +79,7 @@ class MarkAsReadView(APIView):
             work.uptaken_is_read=True
         work.status="In Progress"
         work.save(update_fields=["assigned_is_read","uptaken_is_read","status"])
+        
         return Response({'message':'Work marked as read.'})
         
         

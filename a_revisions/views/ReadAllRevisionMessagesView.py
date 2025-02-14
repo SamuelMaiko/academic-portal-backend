@@ -10,6 +10,8 @@ from a_accounts.helpers import get_admins
 from a_notifications.models import Notification
 from a_revisions.models import Revision
 from a_work.models import Work
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 
 class ReadAllRevisionMessagesView(APIView):
@@ -70,4 +72,19 @@ class ReadAllRevisionMessagesView(APIView):
             
         # mark the other user's messages as read
         revision.messages.exclude(sender=request.user).update(is_read=True)
+
+
+        if revision.work.writer == request.user:
+            target_user_group_name = f"{revision.id}_{revision.reviewer.first_name}".lower()  # Target the reviewer
+        else:
+            target_user_group_name = f"{revision.id}_{revision.work.writer.first_name}".lower()  # Target the writer
+        # sending to socket
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            target_user_group_name,
+            {
+                "type": "message.read",
+            }
+        )
+        
         return Response({'message':'All messages marked as read'})

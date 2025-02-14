@@ -10,6 +10,8 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 
 class SendRevisionMessageView(APIView):
@@ -106,7 +108,35 @@ class SendRevisionMessageView(APIView):
         serializer=RevisionMessageSerializer(data=data, context={'request':request})
         if serializer.is_valid():
             # print("Serializer is valid")
-            serializer.save(sender=request.user)
+            message=serializer.save(sender=request.user)
+            
+            message_data = RevisionMessageSerializer(message, context={"request":request}).data
+
+            # Ensure `is_mine` is always False & `is_read` is always True
+            message_data["is_mine"] = False
+            message_data["is_read"] = False
+
+            if revision.work.writer == request.user:
+                target_user_group_name = f"{revision.id}_{revision.reviewer.first_name}".lower()  # Target the reviewer
+            else:
+                target_user_group_name = f"{revision.id}_{revision.work.writer.first_name}".lower()  # Target the writer
+
+            # print(target_user_group_name)
+
+             # sending to socket
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                target_user_group_name,
+                {
+                    "type": "message.add",
+                    "data": message_data
+                }
+            )
+
+
+            # user_one=revision.work.writer
+            # user_two=request.user
+            # new_data=data
             return Response(serializer.data)
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

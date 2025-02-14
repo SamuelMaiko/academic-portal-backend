@@ -7,6 +7,8 @@ from rest_framework.views import APIView
 
 from a_revisions.models import RevisionMessage
 from a_revisions.permissions import IsRevisionMessageSender
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 
 class DeleteRevisionMessageView(APIView):
@@ -69,5 +71,25 @@ class DeleteRevisionMessageView(APIView):
             return Response({'error':'revision message matching query does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         self.check_object_permissions(request, revision_message)
+
+
+        if revision_message.revision.work.writer == request.user:
+                target_user_group_name = f"{revision_message.revision.id}_{revision_message.revision.reviewer.first_name}".lower()  # Target the reviewer
+        else:
+            target_user_group_name = f"{revision_message.revision.id}_{revision_message.revision.work.writer.first_name}".lower()  # Target the writer
+
+            # print(target_user_group_name)
+
+            # sending to socket
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            target_user_group_name,
+            {
+                "type": "message.delete",
+                "data": revision_message.id
+            }
+        )
+
+
         revision_message.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

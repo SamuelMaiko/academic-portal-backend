@@ -1,1 +1,2 @@
 from .WriterRevisionConsumer import WriterRevisionConsumer
+from .RevisionMessageConsumer import RevisionMessageConsumer
