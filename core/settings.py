@@ -26,6 +26,8 @@ DEBUG = env('DEBUG')
 # ALLOWED_HOSTS = [env("RENDER_EXTERNAL_HOSTNAME")]
 # CSRF_TRUSTED_ORIGINS = ['https://'+env("RENDER_EXTERNAL_HOSTNAME")]
 ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = ['https://academic-portal-backend.onrender.com']
+
 
 INSTALLED_APPS = [
     "daphne",
