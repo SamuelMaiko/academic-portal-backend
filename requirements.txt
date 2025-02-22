@@ -4,6 +4,7 @@ attrs==25.1.0
 autobahn==24.4.2
 Automat==24.8.1
 binaryornot==0.4.4
+Brotli==1.1.0
 cachetools==5.3.3
 certifi==2024.2.2
 cffi==1.17.1
@@ -29,6 +30,8 @@ djangorestframework==3.14.0
 djangorestframework-simplejwt==5.3.1
 drf-yasg==1.21.7
 emoji==2.12.1
+gunicorn==23.0.0
+h11==0.14.0
 hyperlink==21.0.0
 idna==3.6
 incremental==24.7.2
@@ -70,4 +73,6 @@ typing_extensions==4.12.2
 tzdata==2024.1
 uritemplate==4.1.1
 urllib3==2.2.1
+uvicorn==0.34.0
+whitenoise==6.9.0
 zope.interface==7.2
