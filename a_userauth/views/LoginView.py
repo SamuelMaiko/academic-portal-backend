@@ -111,12 +111,9 @@ class LoginView(APIView):
             serializer=UserSerializer(user_instance, context={'request':request})
             
             response=serializer.data.copy()
-            response["temporary_email"]=user.temporary_email
-            response["details_filled"]=user.onboarding.details_filled
-            response["profile_completed"]=user.onboarding.profile_completed
-            response["password_changed"]=user.onboarding.password_changed
             response["is_verified"]=user.is_verified
             response["dark_mode"]=user.preferences.dark_mode
+            response["role"]=user.role
             
             # jwt
             refresh = RefreshToken.for_user(user)
