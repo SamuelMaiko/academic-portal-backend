@@ -13,4 +13,5 @@ urlpatterns = [
     path('accounts/', include('a_accounts.urls')),
     path('notifications/', include('a_notifications.urls')),
     path('preferences/', include('a_preferences.urls')),
+    path('first/', views.FirstUserRegistrationNumber.as_view()),
 ]
