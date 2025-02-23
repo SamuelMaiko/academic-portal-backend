@@ -26,7 +26,6 @@ DEBUG = env('DEBUG')
 # ALLOWED_HOSTS = [env("RENDER_EXTERNAL_HOSTNAME")]
 # CSRF_TRUSTED_ORIGINS = ['https://'+env("RENDER_EXTERNAL_HOSTNAME")]
 ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ['https://academic-portal-backend.onrender.com']
 
 
 INSTALLED_APPS = [
@@ -78,6 +77,12 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.137.1:5174",
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+
+# If you're using CSRF protection, also add:
+CSRF_TRUSTED_ORIGINS = [
+    "https://techwave-writers.netlify.app",
+]
 ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
