@@ -1,5 +1,7 @@
 import io
 import zipfile
+import requests
+import os
 
 from a_work.models import Work
 from django.http import HttpResponse
@@ -8,6 +10,8 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from cloudinary.utils import cloudinary_url
+import mimetypes
 
 
 class DownloadImagesZipView(APIView):
@@ -44,25 +48,37 @@ class DownloadImagesZipView(APIView):
         tags=['Work']
     )
 
-    def get(self,request, work_id):
+    def get(self, request, work_id):
         try:
             work = Work.objects.get(id=work_id)
         except Work.DoesNotExist:
-            return Response({'error': 'work matching query does not exist.'}, status=status.HTTP_404_NOT_FOUND)
-        images = work.images.all()
+            return Response({'error': 'Work matching query does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
-        # Create a byte stream to hold the zip file
+        images = work.images.all()
         buffer = io.BytesIO()
-        
-        # Create a zip file in memory
+
         with zipfile.ZipFile(buffer, 'w') as zip_file:
-            for image in images:
-                image_path = image.image.path
-                image_name = image.image.name
-                zip_file.write(image_path, arcname=image_name)
+            for idx, image in enumerate(images, start=1):
+                image_url = image.image.url
+                print(f"Fetching image from URL: {image_url}")
+
+                try:
+                    response = requests.get(image_url, stream=True)
+                    print(f"Status code: {response.status_code}")
+
+                    if response.status_code == 200:
+                        content_type = response.headers.get('Content-Type', '')
+                        extension = mimetypes.guess_extension(content_type) or ".jpg"
+                        filename = f"image_{idx}{extension}"
+                        print(f"Saving as: {filename} ({content_type})")
+
+                        zip_file.writestr(filename, response.content)
+                    else:
+                        print(f"Failed to download {image_url}. Status: {response.status_code}")
+                except Exception as e:
+                    print(f"Exception while downloading image: {str(e)}")
 
         buffer.seek(0)
-
         response = HttpResponse(buffer, content_type='application/zip')
         response['Content-Disposition'] = f'attachment; filename="images_{work.work_code}.zip"'
         return response
