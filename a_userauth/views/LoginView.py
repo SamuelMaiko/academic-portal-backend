@@ -95,6 +95,8 @@ class LoginView(APIView):
             usr.is_active=True
             usr.save()
 
+        if usr is None:
+            return Response({"error": "Invalid credentials."}, status=status.HTTP_404_NOT_FOUND)
         
         if usr.role!=user_requesting:
             return Response({"error": "Invalid credentials."}, status=status.HTTP_404_NOT_FOUND)

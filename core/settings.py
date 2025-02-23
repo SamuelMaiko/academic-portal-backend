@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'django_extensions',
+    'cloudinary_storage',
+    'cloudinary',
     'api',
     'a_userauth',
     'a_work',
@@ -229,3 +231,12 @@ CHANNEL_LAYERS = {
         # },
     },
 }
+
+# Cloudinary configuration
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': env('CLOUD_NAME'),
+    'API_SECRET': env('API_SECRET'),
+    'API_KEY': env('API_KEY'),
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

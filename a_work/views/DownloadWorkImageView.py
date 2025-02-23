@@ -5,7 +5,8 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from django.http import HttpResponseRedirect
+from cloudinary.utils import cloudinary_url
 
 # Create your views here.
 class DownloadWorkImageView(APIView):
@@ -47,8 +48,13 @@ class DownloadWorkImageView(APIView):
             image = WorkImage.objects.get(id=image_id)
         except WorkImage.DoesNotExist:
             return Response({'detail': 'Not found.'}, status=404)
-        
 
-        file_path = image.image.path
-        response = FileResponse(open(file_path, 'rb'), as_attachment=True, filename=image.image.name)
-        return response
+        # ✅ Force download using fl_attachment with a custom filename
+        download_url, options = cloudinary_url(
+            image.image.name,
+            resource_type="image",
+            transformation=[{'flags': 'attachment', 'fetch_format': 'auto'}],  # 👈 Forces download
+            attachment=image.image.name  # ✅ Sets filename
+        )
+
+        return HttpResponseRedirect(download_url)

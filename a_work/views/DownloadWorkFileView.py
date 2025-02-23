@@ -4,6 +4,8 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.http import HttpResponseRedirect
+from cloudinary.utils import cloudinary_url
 
 from a_work.models import WorkFile
 
@@ -49,6 +51,11 @@ class DownloadWorkFileView(APIView):
         except WorkFile.DoesNotExist:
             return Response({'detail': 'Not found.'}, status=404)
 
-        file_path = file.file.path
-        response = FileResponse(open(file_path, 'rb'), as_attachment=True, filename=file.file.name)
-        return response
+        # ✅ Generate proper Cloudinary URL with fl_attachment using the SDK
+        download_url, options = cloudinary_url(
+            file.file.name,  # Use the path as stored in Cloudinary
+            resource_type="raw",
+            attachment=True,  # Force download
+        )
+
+        return HttpResponseRedirect(download_url)

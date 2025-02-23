@@ -1,9 +1,15 @@
 from django.db import models
 from .Work import Work
 from api.models import BaseModel 
+from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
 class WorkFile(BaseModel):
-    file=models.FileField(upload_to='work_files')
+    file = models.FileField(
+    storage=RawMediaCloudinaryStorage(), 
+    upload_to='academic-portal/work-files/', 
+    blank=True, 
+    null=True
+    )
     work=models.ForeignKey(Work, on_delete=models.CASCADE, related_name='files')
 
     class Meta:

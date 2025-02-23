@@ -2,10 +2,16 @@ import emoji
 from api.models import BaseModel
 from django.conf import settings
 from django.db import models
+from cloudinary_storage.storage import MediaCloudinaryStorage
 
 
 class Profile(BaseModel):
-    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+    profile_picture = models.ImageField(
+        storage=MediaCloudinaryStorage(), 
+        upload_to='academic-portal/profile-pics/', 
+        blank=True, 
+        null=True
+    )
     bio = models.TextField(blank=True)
     phone_number = models.CharField(max_length=20, blank=True)
     country = models.CharField(max_length=100, blank=True)

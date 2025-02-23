@@ -2,14 +2,25 @@ import emoji
 from api.models import BaseModel
 from django.conf import settings
 from django.db import models
+from cloudinary_storage.storage import RawMediaCloudinaryStorage, MediaCloudinaryStorage
 
 from .Revision import Revision
 
 
 class RevisionMessage(BaseModel):
     message = models.TextField(null=True, blank=True)
-    file=models.FileField(upload_to='revision_message_files', null=True, blank=True)
-    image=models.ImageField(upload_to='revision_message_images', null=True, blank=True)
+    file = models.FileField(
+        storage=RawMediaCloudinaryStorage(), 
+        upload_to='academic-portal/revision-message-files/', 
+        blank=True, 
+        null=True
+    )
+    image = models.ImageField(
+        storage=MediaCloudinaryStorage(), 
+        upload_to='academic-portal/revision-message-images/', 
+        blank=True, 
+        null=True
+    )
     is_read=models.BooleanField(default=False)
     sender=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name='revision_messages', null=True)
     revision=models.ForeignKey(Revision, on_delete=models.CASCADE, related_name='messages')
