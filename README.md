@@ -27,9 +27,7 @@ Access it using this [link](https://lucid.app/lucidchart/711faf79-07e4-4c19-b594
 
 ## Swagger Documentation
 
-The API endpoints are documented using Swagger. You can view the full documentation [here](<[swagger_link](http://localhost:8000/swagger/)>).
-
-![Swagger UI](readme_images/swagger.png)
+The API endpoints are documented using Swagger. You can view the full documentation here. [Link](https://techwavewriters.pythonanywhere.com/swagger/).
 
 ## Installation
 
